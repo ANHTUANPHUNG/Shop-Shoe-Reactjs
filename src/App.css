@@ -1,38 +1,173 @@
-.App {
-  text-align: center;
+.form-check {
+    font-size: 0.8rem;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.fa-star {
+    color: yellow;
+    font-size: 12px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.reviews {
+    font-size: 15px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.priceReviews {
+    font-size: 13px;
 }
 
-.App-link {
-  color: #61dafb;
+.fa-user {
+    color: #0d6efd;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#nameProduct {
+    font-weight: bold;
+    width: 188px;
+    height: 44px;
+    text-align: center
+}
+
+#starNumber {
+    justify-content: center
+}
+
+#priceProduct {
+    justify-content: space-around;
+}
+
+.fa-house-user {
+    cursor: pointer;
+    color: #ffd10b;
+}
+
+.fa-house-user:hover {
+    font-size: 20px;
+}
+
+.fa-cart-shopping {
+    cursor: pointer;
+}
+
+.fa-cart-shopping:hover {
+    font-size: 20px;
+}
+
+.container {
+    margin: 0 105px;
+}
+
+#avatarProductDetail {
+    width: 40%;
+    margin-right: 4px;
+    padding: 0 5px;
+}
+
+/* #tableDetail tbody tr th {
+    max-width: 200px;
+} */
+
+#tableDetail tbody tr td.border-end {
+    text-align: center;
+    vertical-align: middle;
+}
+
+#titleDetail {
+    font-size: 13px;
+}
+
+#colorDetail {
+    font-size: 13px;
+}
+
+#divTitleColor {
+    align-self: center;
+}
+
+#aaa {
+    border: 6px solid #c0c0c0;
+    border-radius: 20px;
+    background-color: silver;
+}
+
+#aaa:hover {
+    cursor: pointer;
+}
+
+/* #totalFormDetail {
+    margin: 3px;
+} */
+#quantityProductDetail {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 11px;
+}
+
+#cardProduct:hover {
+    cursor: pointer;
+    color: red;
+}
+
+#quantityProductDetail .span {
+    cursor: pointer;
+}
+
+/* #tableOrderList tr {
+
+    font-size: 13px;
+} */
+
+#statusBill {
+    text-align: center;
+}
+
+#statusBill div {
+    border: 1px solid;
+    border-radius: 15px;
+    background-color: #7c7575;
+    color: white;
+}
+
+#showContentBill {
+    text-align: end;
+}
+
+#productHover:hover {
+    cursor: pointer;
+    background-color: #a3c5e3;
+    border: 1px solid #a3c5e3;
+    border-radius: 5px;
+}
+
+#orderListHover:hover {
+    cursor: pointer;
+    background-color: #a3c5e3;
+    border: 1px solid #a3c5e3;
+    border-radius: 5px;
+}
+
+#showContentBill:hover {
+    cursor: pointer;
+}
+
+.fa-pen-to-square:hover {
+    cursor: pointer;
+}
+
+.fa-trash-can {
+    cursor: pointer;
+}
+
+.fa-user:hover {
+    cursor: pointer;
+    font-size: 22px;
+}
+
+#goProduct:hover {
+    cursor: pointer;
+    font-size: 15px;
+}
+#tbRenderProduct th{
+    text-align: center;
+}
+#tbRenderProduct td{
+    text-align: center;
 }
