@@ -13,7 +13,12 @@ function ShowProductDetail({
         <tr key={product.id}>
           <td className="border-end">
             <div className="d-flex ">
-              <img id="avatarProductDetail" src={product.img} alt="" />
+              <img
+                id="avatarProductDetail"
+                style={{ width: "100px", height: "50px" }}
+                src={product.img}
+                alt=""
+              />
               <div id="divTitleColor" className="d-inline">
                 <div id="titleDetail" className="d-block fw-bolder mb-2 ">
                   {product.title}

@@ -192,7 +192,10 @@ function DashboardOrder() {
       const res = await response.json();
       const start = (pageNumber - 1) * element;
       const end = start + Number(element);
-      const displayedProducts = res.slice(start, end);
+      const sortedItems = [...res].sort((a, b) => {
+        return b.id - a.id;
+      });
+      const displayedProducts = sortedItems.slice(start, end);
 
       setProduct(displayedProducts);
       const number = Math.ceil(res.length / element);
