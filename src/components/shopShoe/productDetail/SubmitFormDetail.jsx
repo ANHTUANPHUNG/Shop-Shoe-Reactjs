@@ -1,7 +1,18 @@
 import React from "react";
 
 function SubmitFormDetail(props) {
-  const { totalDetail, setFullName, setAddress, setEmail, setMobile, handleSubmitForm } = props;
+  const {
+    totalDetail,
+    setFullName,
+    setAddress,
+    setEmail,
+    setMobile,
+    handleSubmitForm,
+    fullName,
+    email,
+    address,
+    mobile,
+  } = props;
   return (
     <form onSubmit={(e) => handleSubmitForm(e)}>
       <div className="p-3 rounded" style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}>
@@ -31,44 +42,80 @@ function SubmitFormDetail(props) {
         </div>
         <div>
           <div className="mb-3">
-            <span className="mb-2">FullName</span>
+            <label htmlFor="fullNameFormDetail" className="mb-2">
+              FullName
+            </label>
             <input
               onInput={(e) => setFullName(e.target.value)}
               type="text"
               className="form-control"
               placeholder="FullName"
-              required
+              id="fullNameFormDetail"
             />
+            {fullName != "" ? (
+              ""
+            ) : (
+              <label style={{ color: "red" }} htmlFor="fullNameFormDetail" className="mt-2">
+                FullName is a required field
+              </label>
+            )}
           </div>
           <div className="mb-3">
-            <span className="mb-2">Address</span>
+            <label htmlFor="addressFormDetail" className="mb-2">
+              Address
+            </label>
             <input
               onInput={(e) => setAddress(e.target.value)}
               type="text"
               className="form-control"
               placeholder="Address"
-              required
+              id="addressFormDetail"
             />
+            {address != "" ? (
+              ""
+            ) : (
+              <label style={{ color: "red" }} htmlFor="addressFormDetail" className="mt-2">
+                Address is a required field
+              </label>
+            )}
           </div>
           <div className="mb-3">
-            <span className="mb-2">Email</span>
+            <label htmlFor="emailFormDetail" className="mb-2">
+              Email
+            </label>
             <input
               onInput={(e) => setEmail(e.target.value)}
               type="email"
               className="form-control"
               placeholder="Email"
-              required
+              id="emailFormDetail"
             />
+            {email != "" ? (
+              ""
+            ) : (
+              <label style={{ color: "red" }} htmlFor="emailFormDetail" className="mt-2">
+                Email is a required field
+              </label>
+            )}
           </div>
           <div className="mb-3">
-            <span className="mb-2">Mobile</span>
+            <label htmlFor="mobileFormDetail" className="mb-2">
+              Mobile
+            </label>
             <input
               onInput={(e) => setMobile(e.target.value)}
               type="text"
               className="form-control"
               placeholder="Mobile"
-              required
+              id="mobileFormDetail"
             />
+            {mobile != "" ? (
+              ""
+            ) : (
+              <label style={{ color: "red" }} htmlFor="mobileFormDetail" className="mt-2">
+                Mobile is a required field
+              </label>
+            )}
           </div>
         </div>
       </div>

@@ -37,14 +37,8 @@ export function ProductListDashboard({ product, handleShow, handleDeleteProduct 
             <td className="align-middle">{e.category}</td>
             <td className="align-middle">{e.company}</td>
             <td>
-              {e.prevPrice ? (
-                <>
-                  <div>${e.prevPrice}</div>
-                  <div>${e.newPrice}</div>
-                </>
-              ) : (
-                <div>${e.newPrice}</div>
-              )}
+              <div>${e.prevPrice}</div>
+              <div>${e.newPrice}</div>
             </td>
             <td>
               <div>

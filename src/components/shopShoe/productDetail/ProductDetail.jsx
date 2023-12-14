@@ -109,6 +109,10 @@ function ProductDetail() {
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
+    if (fullName == "" || address == "" || email == "" || mobile == "") {
+      toast.error("Fill in all required fields");
+      return;
+    }
     const submitForm = {
       product: [...productDetailCustomer],
       totalDetail: totalDetail,
@@ -226,7 +230,11 @@ function ProductDetail() {
                     setEmail={setEmail}
                     setMobile={setMobile}
                     handleSubmitForm={handleSubmitForm}
-                  />{" "}
+                    fullName={fullName}
+                    email={email}
+                    address={address}
+                    mobile={mobile}
+                  />
                 </div>
               </div>
             </div>

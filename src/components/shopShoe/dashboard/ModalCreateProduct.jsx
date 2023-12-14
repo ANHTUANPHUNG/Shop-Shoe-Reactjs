@@ -19,7 +19,7 @@ export function ModalCreateProduct({
   return (
     <form className="row" onSubmit={(e) => handleSubmitFormAdd(e)}>
       <div className="col-4">
-        <div className="mb-2">
+        <div>
           <label htmlFor="title" className="form-label">
             Title
           </label>
@@ -31,8 +31,15 @@ export function ModalCreateProduct({
             id="title"
             className="form-control form-control-sm"
           />
+          {title == "" ? (
+            <label htmlFor="title"  style={{ color: "red" }} className="form-label">
+              Title is a required field
+            </label>
+          ) : (
+            ""
+          )}
         </div>
-        <div className="mb-2">
+        <div>
           <label htmlFor="price" className="form-label">
             Price
           </label>
@@ -44,8 +51,15 @@ export function ModalCreateProduct({
             id="price"
             className="form-control form-control-sm"
           />
+          {price == "" ? (
+            <label htmlFor="price" style={{ color: "red" }} className="form-label">
+              Price is a required field
+            </label>
+          ) : (
+            ""
+          )}
         </div>
-        <div className="mb-2">
+        <div>
           <div className="d-flex ">
             <button style={{ width: "145px" }} className="btn btn-success btn-sm mt-3 ">
               Add
@@ -64,11 +78,12 @@ export function ModalCreateProduct({
         </div>
       </div>
       <div className="col-md-4">
-        <div className="form-group mb-2">
+        <div className="form-group">
           <label className="form-label">Category</label>
           <select
             className="form-select form-select-sm form-control-sm "
             name="category"
+            id="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -78,12 +93,20 @@ export function ModalCreateProduct({
             <option value="Sandals">Sandals</option>
             <option value="Heels">Heels</option>
           </select>
+          {category == "" ? (
+            <label className="form-label" htmlFor="category" style={{ color: "red" }}>
+              Category is a required field
+            </label>
+          ) : (
+            ""
+          )}
         </div>
-        <div className="form-group mb-2">
+        <div className="form-group">
           <label className="form-label">Company</label>
           <select
             className="form-select form-select-sm form-control-sm "
             name="company"
+            id="company"
             onChange={(e) => setCompany(e.target.value)}
             value={company}
           >
@@ -93,12 +116,20 @@ export function ModalCreateProduct({
             <option value="Puma">Puma</option>
             <option value="Vans">Vans</option>
           </select>
+          {company == "" ? (
+            <label className="form-label" id="company" style={{ color: "red" }}>
+              Company is a required field
+            </label>
+          ) : (
+            ""
+          )}
         </div>
-        <div className="form-group mb-2">
+        <div className="form-group">
           <label className="form-label">Color</label>
           <select
             className="form-select form-select-sm form-control-sm "
             name="color"
+            id="color"
             value={color}
             onChange={(e) => setColor(e.target.value)}
           >
@@ -109,9 +140,19 @@ export function ModalCreateProduct({
             <option value="Green">Green</option>
             <option value="White">White</option>
           </select>
+          {color == "" ? (
+            <label className="form-label" htmlFor="color" style={{ color: "red" }}>
+              Color is a required field
+            </label>
+          ) : (
+            ""
+          )}
         </div>
       </div>
-      <div className="col-md-4 border border-info d-flex align-items-center justify-content-center">
+      <div
+        className="col-md-4 border border-info d-flex align-items-center justify-content-center"
+        style={{ height: "235px" }}
+      >
         <div className="text-center">
           {url == "" && (
             <Fragment>
@@ -125,6 +166,11 @@ export function ModalCreateProduct({
                 onChange={handleImageChange}
                 style={{ display: "none" }}
               />
+              <div>
+                <label className="form-label" htmlFor="fileInput" style={{ color: "red" }}>
+                  Image is a required field
+                </label>
+              </div>
             </Fragment>
           )}
           {url != "" && (

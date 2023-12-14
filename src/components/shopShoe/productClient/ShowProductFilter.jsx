@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 function ShowProductFilter({ productListSearch, handleListProductDetail }) {
   return (
@@ -36,10 +36,16 @@ function ShowProductFilter({ productListSearch, handleListProductDetail }) {
                 </div>
                 <div className="align-item-center d-flex " id="priceProduct">
                   <div className="d-flex">
-                    <p className="me-2 mb-0 priceReviews text-decoration-line-through">
-                      ${product.newPrice}
-                    </p>
-                    <p className=" mb-0 priceReviews">${product.prevPrice}</p>
+                    {product.prevPrice != 0 ? (
+                      <Fragment>
+                        <p className="me-2 mb-0 priceReviews text-decoration-line-through">
+                          ${product.newPrice}
+                        </p>
+                        <p className=" mb-0 priceReviews">${product.prevPrice}</p>
+                      </Fragment>
+                    ) : (
+                      <p className="me-2 mb-0 priceReviews ">${product.newPrice}</p>
+                    )}
                   </div>
                   <div id="cardProduct" onClick={() => handleListProductDetail(product.id)}>
                     <i className="fa-solid fa-cart-arrow-down"></i>

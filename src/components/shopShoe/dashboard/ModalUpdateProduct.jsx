@@ -37,7 +37,7 @@ export function ModalUpdateProduct({
       <Modal.Body>
         <form className="row">
           <div className="col-4">
-            <div className="mb-2">
+            <div>
               <label htmlFor="title" className="form-label">
                 Title
               </label>
@@ -49,8 +49,15 @@ export function ModalUpdateProduct({
                 id="title"
                 className="form-control form-control-sm"
               />
+              {title == "" ? (
+                <label htmlFor="title" style={{ color: "red" }} className="form-label">
+                  Title is a required field
+                </label>
+              ) : (
+                ""
+              )}
             </div>
-            <div className="mb-2">
+            <div>
               <label htmlFor="price" className="form-label">
                 Price
               </label>
@@ -62,8 +69,15 @@ export function ModalUpdateProduct({
                 id="price"
                 className="form-control form-control-sm"
               />
+              {price == "" ? (
+                <label htmlFor="price" style={{ color: "red" }} className="form-label">
+                  Price is a required field
+                </label>
+              ) : (
+                ""
+              )}
             </div>
-            <div className="mb-2">
+            <div>
               <label htmlFor="prevPrice" className="form-label">
                 Reduced
               </label>
@@ -75,10 +89,11 @@ export function ModalUpdateProduct({
                 id="prevPrice"
                 className="form-control form-control-sm"
               />
+              
             </div>
           </div>
           <div className="col-md-4">
-            <div className="form-group mb-2">
+            <div className="form-group ">
               <label className="form-label">Category</label>
               <select
                 className="form-select form-select-sm form-control-sm "
@@ -92,8 +107,15 @@ export function ModalUpdateProduct({
                 <option value="Sandals">Sandals</option>
                 <option value="Heels">Heels</option>
               </select>
+              {category == "" ? (
+                <label className="form-label" style={{ color: "red" }}>
+                  Category is a required field
+                </label>
+              ) : (
+                ""
+              )}
             </div>
-            <div className="form-group mb-2">
+            <div className="form-group ">
               <label className="form-label">Company</label>
               <select
                 className="form-select form-select-sm form-control-sm "
@@ -107,8 +129,15 @@ export function ModalUpdateProduct({
                 <option value="Puma">Puma</option>
                 <option value="Vans">Vans</option>
               </select>
+              {company == "" ? (
+                <label className="form-label" style={{ color: "red" }}>
+                  Company is a required field
+                </label>
+              ) : (
+                ""
+              )}
             </div>
-            <div className="form-group mb-2">
+            <div className="form-group ">
               <label className="form-label">Color</label>
               <select
                 className="form-select form-select-sm form-control-sm "
@@ -123,6 +152,13 @@ export function ModalUpdateProduct({
                 <option value="Green">Green</option>
                 <option value="White">White</option>
               </select>
+              {color == "" ? (
+                <label className="form-label" style={{ color: "red" }}>
+                  Color is a required field
+                </label>
+              ) : (
+                ""
+              )}
             </div>
           </div>
           <div className="col-md-4 border border-info d-flex align-items-center justify-content-center">

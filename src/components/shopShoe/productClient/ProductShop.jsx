@@ -10,7 +10,6 @@ import PriceFilter from "./PriceFilter";
 import RecommendedFilter from "./RecommendedFilter ";
 import ShowProductFilter from "./ShowProductFilter";
 import DashboardOrder from "../dashboard/DashboardOrder";
-
 function ProductShop() {
   const [productList, setProductList] = useState([]);
   const [productListSearch, setProductListSearch] = useState([]);
@@ -156,6 +155,17 @@ function ProductShop() {
     window.addEventListener("scroll", handleScroll);
   }, []);
 
+  const handleCheckBillDetailClient = () => {
+    if (billDetailApi.length == 0) {
+      setShowProductDetail(false) && setShowFunction(true);
+      toast.warning("Cart no products", {
+        theme: "light",
+      });
+    } else {
+      setShowProductDetail(true) && setShowFunction(false);
+    }
+  };
+
   return (
     <Fragment>
       {!showFunction && !showProductDetail && !showAdmin && (
@@ -173,11 +183,7 @@ function ProductShop() {
                 <div>
                   <i
                     className="fa-solid fa-cart-shopping   align-bottom"
-                    onClick={() =>
-                      billDetailApi.length == 0
-                        ? setShowProductDetail(false) && setShowFunction(true)
-                        : setShowProductDetail(true) && setShowFunction(false)
-                    }
+                    onClick={() => handleCheckBillDetailClient()}
                   ></i>
                 </div>
                 <div className="pe-2">

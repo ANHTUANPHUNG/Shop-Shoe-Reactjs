@@ -142,7 +142,10 @@ function DashboardOrder() {
   };
   const handleSubmitFormUpdate = async (e) => {
     let productUpdate = product.find((e) => e.id == idProduct);
-
+    if (title == "" || price == "" || category == "" || color == "" || company == "" || url == "") {
+      toast.error("Fill in all required fields");
+      return;
+    }
     productUpdate = {
       title: title,
       star: 4,
@@ -152,6 +155,7 @@ function DashboardOrder() {
       company: company,
       color: color,
       category: category,
+      prevPrice: prevPrice,
     };
 
     const response = await fetch("http://localhost:3300/product/" + idProduct, {
@@ -173,6 +177,15 @@ function DashboardOrder() {
       });
     }
   };
+  const handleShowFormCreateProduct = () => (
+    setPrice(""),
+    setTitle(""),
+    setCompany(""),
+    setCategory(""),
+    setColor(""),
+    setUrl(""),
+    setShowFormAddProduct(true)
+  );
   const handleClose = () => setShow(false);
   useEffect(() => {
     const fetchData = async () => {
@@ -213,7 +226,10 @@ function DashboardOrder() {
   };
   const handleSubmitFormAdd = async (e) => {
     e.preventDefault();
-
+    if (title == "" || price == "" || category == "" || color == "" || company == "" || url == "") {
+      toast.error("Fill in all required fields");
+      return;
+    }
     const product = {
       title: title,
       star: 4,
@@ -223,6 +239,7 @@ function DashboardOrder() {
       company: company,
       color: color,
       category: category,
+      prevPrice: 0,
     };
 
     const response = await fetch("http://localhost:3300/product", {
@@ -319,7 +336,7 @@ function DashboardOrder() {
                     <button
                       type="button"
                       className="btn btn-warning"
-                      onClick={() => setShowFormAddProduct(true)}
+                      onClick={() => handleShowFormCreateProduct()}
                     >
                       <i className="fa-solid fa-plus "></i>
                       Add new Product
