@@ -61,7 +61,7 @@ export function ModalCreateProduct({
         </div>
         <div>
           <div className="d-flex ">
-            <button style={{ width: "145px" }} className="btn btn-success btn-sm mt-3 ">
+            <button style={{ width: "145px" }} className="btn btn-success btn-sm mt-3  ">
               Add
             </button>
             <button
@@ -141,7 +141,7 @@ export function ModalCreateProduct({
             <option value="White">White</option>
           </select>
           {color == "" ? (
-            <label className="form-label" htmlFor="color" style={{ color: "red" }}>
+            <label className="form-label " htmlFor="color" style={{ color: "red" }}>
               Color is a required field
             </label>
           ) : (
