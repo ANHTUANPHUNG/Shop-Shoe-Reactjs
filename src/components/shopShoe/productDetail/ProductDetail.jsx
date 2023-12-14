@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from "react";
-import ShowFunction from "../../Show";
 import InputSearch from "../productClient/InputSearch";
 import ProductShop from "../productClient/ProductShop";
 import Swal from "sweetalert2";
@@ -9,7 +8,6 @@ import DashboardOrder from "../dashboard/DashboardOrder";
 import ShowProductDetail from "./ShowProductDetail";
 import SubmitFormDetail from "./SubmitFormDetail";
 function ProductDetail() {
-  const [showFunction, setShowFunction] = useState(false);
   const [showProductShop, setShowProductShop] = useState(false);
   const [productDetailCustomer, setProductDetailCustomer] = useState([]);
   const [checkCartDetail, setCheckCartDetail] = useState(false);
@@ -145,7 +143,7 @@ function ProductDetail() {
   const productHandle = () => {};
   return (
     <Fragment>
-      {!showFunction && !showProductShop && !showAdmin && (
+      { !showProductShop && !showAdmin && (
         <Fragment>
           <div className="d-flex mt-2 py-2 border-bottom align-items-center container">
             <div className="ms-0 ps-2" style={{ width: "180px" }}>
@@ -186,7 +184,7 @@ function ProductDetail() {
                   <i className="fa-solid fa-user me-3" onClick={() => setShowAdmin(true)}></i>
                 </div>
                 <div>
-                  <i className="fa-solid fa-house-user" onClick={() => setShowFunction(true)}></i>
+                  <i className="fa-solid fa-house-user" ></i>
                 </div>
               </div>
             </div>
@@ -242,7 +240,6 @@ function ProductDetail() {
         </Fragment>
       )}
       {showProductShop && <ProductShop />}
-      {showFunction && <ShowFunction />}
       {showAdmin && <DashboardOrder />}
     </Fragment>
   );

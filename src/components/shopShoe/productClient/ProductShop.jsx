@@ -1,5 +1,4 @@
 import React, { Fragment, useState, useEffect } from "react";
-import ShowFunction from "../../Show";
 import InputSearch from "./InputSearch";
 import ProductDetail from "../productDetail/ProductDetail";
 import { toast } from "react-toastify";
@@ -23,7 +22,6 @@ function ProductShop() {
   const [pricesSearch, setPricesSearch] = useState("all");
   const [companiesSearch, setCompaniesSearch] = useState("all");
   const [activeButton, setActiveButton] = useState("all");
-  const [showFunction, setShowFunction] = useState(false);
   const [showProductDetail, setShowProductDetail] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showGoToTop, setShowGoToTop] = useState(false);
@@ -157,18 +155,18 @@ function ProductShop() {
 
   const handleCheckBillDetailClient = () => {
     if (billDetailApi.length == 0) {
-      setShowProductDetail(false) && setShowFunction(true);
+      setShowProductDetail(false);
       toast.warning("Cart no products", {
         theme: "light",
       });
     } else {
-      setShowProductDetail(true) && setShowFunction(false);
+      setShowProductDetail(true);
     }
   };
 
   return (
     <Fragment>
-      {!showFunction && !showProductDetail && !showAdmin && (
+      {!showProductDetail && !showAdmin && (
         <Fragment>
           <div className="d-flex mt-2 py-2 border-bottom align-items-center container">
             <div className="ms-0 ps-2" style={{ width: "180px" }}>
@@ -210,10 +208,7 @@ function ProductShop() {
                   ></i>
                 </div>
                 <div>
-                  <i
-                    className="fa-solid fa-house-user align-bottom"
-                    onClick={() => setShowFunction(true)}
-                  ></i>
+                  <i className="fa-solid fa-house-user align-bottom"></i>
                 </div>
               </div>
             </div>
@@ -254,7 +249,6 @@ function ProductShop() {
           Go to Top
         </button>
       )}
-      {showFunction && <ShowFunction />}
       {showProductDetail && <ProductDetail />}
       {showAdmin && <DashboardOrder />}
     </Fragment>
