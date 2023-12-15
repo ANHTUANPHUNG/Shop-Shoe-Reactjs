@@ -1,14 +1,12 @@
 import React, { Fragment, useEffect, useState } from "react";
 import InputSearch from "../productClient/InputSearch";
-import ProductShop from "../productClient/ProductShop";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import moment from "moment";
-import DashboardOrder from "../dashboard/DashboardOrder";
 import ShowProductDetail from "./ShowProductDetail";
 import SubmitFormDetail from "./SubmitFormDetail";
+import { NavLink } from "react-router-dom";
 function ProductDetail() {
-  const [showProductShop, setShowProductShop] = useState(false);
   const [productDetailCustomer, setProductDetailCustomer] = useState([]);
   const [checkCartDetail, setCheckCartDetail] = useState(false);
   const [totalDetail, setTotalDetail] = useState(0);
@@ -16,7 +14,6 @@ function ProductDetail() {
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
-  const [showAdmin, setShowAdmin] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -143,19 +140,14 @@ function ProductDetail() {
   const productHandle = () => {};
   return (
     <Fragment>
-      { !showProductShop && !showAdmin && (
+      
         <Fragment>
           <div className="d-flex mt-2 py-2 border-bottom align-items-center container">
             <div className="ms-0 ps-2" style={{ width: "180px" }}>
-              <a
-                href="#"
-                onClick={() => setShowProductShop(true)}
-                className="text-decoration-none "
-                style={{ color: "black" }}
-              >
+              <NavLink to={"/"} className="nav-link" style={{ color: "black" }}>
                 <i className="fa-solid fa-cart-plus me-2"></i>
                 Shoe Ecommerce
-              </a>
+              </NavLink>
             </div>
             <div className="d-flex justify-content-between">
               <InputSearch inputSearchProduct={productHandle} />
@@ -181,10 +173,12 @@ function ProductDetail() {
                   )}
                 </div>
                 <div>
-                  <i className="fa-solid fa-user me-3" onClick={() => setShowAdmin(true)}></i>
+                  <NavLink to={"/dashboard"}>
+                    <i className="fa-solid fa-user me-3"></i>
+                  </NavLink>
                 </div>
                 <div>
-                  <i className="fa-solid fa-house-user" ></i>
+                  <i className="fa-solid fa-house-user"></i>
                 </div>
               </div>
             </div>
@@ -215,10 +209,9 @@ function ProductDetail() {
                       />
                     </tbody>
                   </table>
-                  <a href="#" onClick={() => setShowProductShop(true)}>
-                    {" "}
+                  <NavLink to={"/"} >
                     <i className="fa-solid fa-left-long me-1"></i>Continue Shopping
-                  </a>
+                  </NavLink>
                 </div>
                 <div className="col-4 ">
                   <SubmitFormDetail
@@ -238,9 +231,8 @@ function ProductDetail() {
             </div>
           </div>
         </Fragment>
-      )}
-      {showProductShop && <ProductShop />}
-      {showAdmin && <DashboardOrder />}
+      
+      
     </Fragment>
   );
 }

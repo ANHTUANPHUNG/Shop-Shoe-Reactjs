@@ -8,7 +8,7 @@ import CategoryFilter from "./CategoryFilter";
 import PriceFilter from "./PriceFilter";
 import RecommendedFilter from "./RecommendedFilter ";
 import ShowProductFilter from "./ShowProductFilter";
-import DashboardOrder from "../dashboard/DashboardOrder";
+import { NavLink } from "react-router-dom";
 function ProductShop() {
   const [productList, setProductList] = useState([]);
   const [productListSearch, setProductListSearch] = useState([]);
@@ -22,8 +22,6 @@ function ProductShop() {
   const [pricesSearch, setPricesSearch] = useState("all");
   const [companiesSearch, setCompaniesSearch] = useState("all");
   const [activeButton, setActiveButton] = useState("all");
-  const [showProductDetail, setShowProductDetail] = useState(false);
-  const [showAdmin, setShowAdmin] = useState(false);
   const [showGoToTop, setShowGoToTop] = useState(false);
   const [billDetailApi, setBillDetailApi] = useState([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
@@ -155,88 +153,85 @@ function ProductShop() {
 
   const handleCheckBillDetailClient = () => {
     if (billDetailApi.length == 0) {
-      setShowProductDetail(false);
       toast.warning("Cart no products", {
         theme: "light",
       });
-    } else {
-      setShowProductDetail(true);
     }
   };
 
   return (
     <Fragment>
-      {!showProductDetail && !showAdmin && (
-        <Fragment>
-          <div className="d-flex mt-2 py-2 border-bottom align-items-center container">
-            <div className="ms-0 ps-2" style={{ width: "180px" }}>
-              <a href="#" className="text-decoration-none " style={{ color: "black" }}>
-                <i className="fa-solid fa-cart-plus me-2"></i>
-                Shoe Ecommerce
-              </a>
+      <div className="d-flex mt-2 py-2 border-bottom align-items-center container">
+        <div className="ms-0 ps-2" style={{ width: "180px" }}>
+          <a href="#" className="text-decoration-none " style={{ color: "black" }}>
+            <i className="fa-solid fa-cart-plus me-2"></i>
+            Shoe Ecommerce
+          </a>
+        </div>
+        <div className="d-flex flex-grow-1 justify-content-between ">
+          <InputSearch inputSearchProduct={(prev) => setInputSearch(prev)} />
+          <div className="d-flex">
+            <div onClick={handleCheckBillDetailClient}>
+              {billDetailApi.length !== 0 ? (
+                <NavLink to={"/cartUser"}>
+                  <i className="fa-solid fa-cart-shopping align-bottom"></i>
+                </NavLink>
+              ) : (
+                <i className="fa-solid fa-cart-shopping align-bottom"></i>
+              )}
             </div>
-            <div className="d-flex flex-grow-1 justify-content-between ">
-              <InputSearch inputSearchProduct={(prev) => setInputSearch(prev)} />
-              <div className="d-flex">
-                <div>
-                  <i
-                    className="fa-solid fa-cart-shopping   align-bottom"
-                    onClick={() => handleCheckBillDetailClient()}
-                  ></i>
-                </div>
-                <div className="pe-2">
-                  {billDetailApi != "" ? (
-                    <span
-                      style={{
-                        border: "1px solid red",
-                        borderRadius: "5px",
-                        backgroundColor: "red",
-                        fontSize: "15px",
-                        color: "white",
-                      }}
-                    >
-                      {billDetailApi.length}
-                    </span>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div>
-                  <i
-                    className="fa-solid fa-user me-3 align-bottom"
-                    onClick={() => setShowAdmin(true)}
-                  ></i>
-                </div>
-                <div>
-                  <i className="fa-solid fa-house-user align-bottom"></i>
-                </div>
-              </div>
+
+            <div className="pe-2">
+              {billDetailApi != "" ? (
+                <span
+                  style={{
+                    border: "1px solid red",
+                    borderRadius: "5px",
+                    backgroundColor: "red",
+                    fontSize: "15px",
+                    color: "white",
+                  }}
+                >
+                  {billDetailApi.length}
+                </span>
+              ) : (
+                ""
+              )}
+            </div>
+            <div>
+              <NavLink to={"/dashboard"}>
+                <i className="fa-solid fa-user me-3 align-bottom"></i>
+              </NavLink>
+            </div>
+            <div>
+              <i className="fa-solid fa-house-user align-bottom"></i>
             </div>
           </div>
-          <div className="d-flex container">
-            <div style={{ minWidth: "180px" }}>
-              <div className=" border-end me-1 h-100">
-                <CategoryFilter categories={categories} setCategoriesSearch={setCategoriesSearch} />
+        </div>
+      </div>
+      <div className="d-flex container">
+        <div style={{ minWidth: "180px" }}>
+          <div className=" border-end me-1 h-100">
+            <CategoryFilter categories={categories} setCategoriesSearch={setCategoriesSearch} />
 
-                <PriceFilter prices={prices} setPricesSearch={setPricesSearch} />
+            <PriceFilter prices={prices} setPricesSearch={setPricesSearch} />
 
-                <ColorFilter colors={colors} setColorsSearch={setColorsSearch} />
-              </div>
-            </div>
-            <div className="flex-grow-1">
-              <RecommendedFilter
-                companies={companies}
-                activeButton={activeButton}
-                handleCheckCompany={handleCheckCompany}
-              />
-              <ShowProductFilter
-                productListSearch={productListSearch}
-                handleListProductDetail={handleListProductDetail}
-              />
-            </div>
+            <ColorFilter colors={colors} setColorsSearch={setColorsSearch} />
           </div>
-        </Fragment>
-      )}
+        </div>
+        <div className="flex-grow-1">
+          <RecommendedFilter
+            companies={companies}
+            activeButton={activeButton}
+            handleCheckCompany={handleCheckCompany}
+          />
+          <ShowProductFilter
+            productListSearch={productListSearch}
+            handleListProductDetail={handleListProductDetail}
+          />
+        </div>
+      </div>
+
       {showGoToTop && (
         <button
           onClick={() => window.scrollTo(0, 0)}
@@ -249,8 +244,6 @@ function ProductShop() {
           Go to Top
         </button>
       )}
-      {showProductDetail && <ProductDetail />}
-      {showAdmin && <DashboardOrder />}
     </Fragment>
   );
 }

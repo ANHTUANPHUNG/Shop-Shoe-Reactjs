@@ -1,19 +1,27 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
+import { NavLink } from "react-router-dom";
 
-export function MenuDashboard({ setCheckCRUDProduct }) {
+export function MenuDashboard() {
+  const [check, setCheck] = useState(true)
   return (
-    <div style={{ width: "148px" }}>
-      <div className="mb-2 ">
-        <h5>Menu</h5>
+    <Fragment>
+      <div style={{ width: "148px" }}>
+        <div className="mb-2">
+          <h5>Menu</h5>
+        </div>
+        <NavLink to={"/dashboard"} className="nav-link" >
+          <div id="orderListHover" className="py-2">
+            <i className="fa-solid fa-cart-arrow-down me-1"></i>
+            <span>Order List</span>
+          </div>
+        </NavLink>
+        <NavLink to={"/dashboard/product"} className="nav-link" >
+          <div id="productHover" className="py-2">
+            <i className="fa-solid fa-code-branch me-1"></i>
+            <span>Products</span>
+          </div>
+        </NavLink>
       </div>
-      <div id="orderListHover" className="py-2" onClick={() => setCheckCRUDProduct(false)}>
-        <i className="fa-solid fa-cart-arrow-down me-1" style={{ color: "#0a5dff" }}></i>
-        <span style={{ color: "#0a5dff" }}>Order List</span>
-      </div>
-      <div id="productHover" className="py-2" onClick={() => setCheckCRUDProduct(true)}>
-        <i className="fa-solid fa-code-branch me-1" style={{ color: "#0a5dff" }}></i>
-        <span style={{ color: "#0a5dff" }}>Products</span>
-      </div>
-    </div>
+    </Fragment>
   );
 }

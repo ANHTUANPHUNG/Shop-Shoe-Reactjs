@@ -1,25 +1,17 @@
-import React, { Fragment, useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import { Button } from "react-bootstrap";
-import { Modal } from "react-bootstrap";
-import Swal from "sweetalert2";
-import ProductShop from "../productClient/ProductShop";
-import { MenuDashboard } from "./MenuDashboard";
-import { OrderManagement } from "./OrderManagement";
-import { BillInformation } from "./BillInformation";
-import { Pagination } from "./Pagination";
-import { ProductListDashboard } from "./ProductListDashboard";
-import { SortDashboard } from "./SortDashboard";
-import { ModalUpdateProduct } from "./ModalUpdateProduct";
+import React, { Fragment, useEffect, useState } from "react";
+import { MenuDashboard } from "../MenuDashboard";
 import { ModalCreateProduct } from "./ModalCreateProduct";
+import { SortDashboard } from "./SortDashboard";
+import { ProductListDashboard } from "./ProductListDashboard";
+import { Pagination } from "./Pagination";
+import { ModalUpdateProduct } from "./ModalUpdateProduct";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import { LayoutDashboard } from "../LayoutDashboard";
 
-function DashboardOrder() {
-  const [listBill, setListBill] = useState([]);
-  const [billId, setBillId] = useState([]);
-  const [billInformation, setBillInformation] = useState(false);
+export function ProductDashboard() {
   const [checkCRUDProduct, setCheckCRUDProduct] = useState(false);
   const [showFormAddProduct, setShowFormAddProduct] = useState(false);
-  const [showDashboard, setShowDashboard] = useState(true);
   const [product, setProduct] = useState([]);
   const [checkListProduct, setCheckListProduct] = useState([]);
   const [title, setTitle] = useState("");
@@ -29,7 +21,6 @@ function DashboardOrder() {
   const [color, setColor] = useState("");
   const [company, setCompany] = useState("");
   const [show, setShow] = useState(false);
-  const [showProduct, setShowProduct] = useState(false);
   const [idProduct, setIdProduct] = useState("");
   const [sort, setSort] = useState("id");
   const [sortCheck, setSortCheck] = useState("ascendent");
@@ -187,17 +178,6 @@ function DashboardOrder() {
     setShowFormAddProduct(true)
   );
   const handleClose = () => setShow(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(`http://localhost:3300/billDetail`);
-
-      const res = await response.json();
-
-      setListBill(res);
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -217,13 +197,6 @@ function DashboardOrder() {
     fetchData();
   }, [pageNumber, checkListProduct, element]);
 
-  const handleShowContentBill = (id) => {
-    const bill = listBill.find((e) => e.id == id);
-
-    setBillId(bill);
-
-    setBillInformation(true);
-  };
   const handleSubmitFormAdd = async (e) => {
     e.preventDefault();
     if (title == "" || price == "" || category == "" || color == "" || company == "" || url == "") {
@@ -265,141 +238,94 @@ function DashboardOrder() {
       });
     }
   };
-
   return (
     <Fragment>
-      {showDashboard && (
-        <Fragment>
-          <ModalUpdateProduct
-            show={show}
-            handleClose={handleClose}
-            setTitle={setTitle}
-            title={title}
-            price={price}
-            setPrice={setPrice}
-            setPrevPrice={setPrevPrice}
-            prevPrice={prevPrice}
-            category={category}
-            setCategory={setCategory}
-            company={company}
-            setCompany={setCompany}
-            color={color}
-            setColor={setColor}
-            url={url}
-            setShow={setShow}
-            handleImageChange={handleImageChange}
-            handleSubmitFormUpdate={handleSubmitFormUpdate}
-          />
+      <Fragment>
+        <ModalUpdateProduct
+          show={show}
+          handleClose={handleClose}
+          setTitle={setTitle}
+          title={title}
+          price={price}
+          setPrice={setPrice}
+          setPrevPrice={setPrevPrice}
+          prevPrice={prevPrice}
+          category={category}
+          setCategory={setCategory}
+          company={company}
+          setCompany={setCompany}
+          color={color}
+          setColor={setColor}
+          url={url}
+          setShow={setShow}
+          handleImageChange={handleImageChange}
+          handleSubmitFormUpdate={handleSubmitFormUpdate}
+        />
+        <LayoutDashboard />
+        <div className="container my-2 d-flex">
+          <div className="d-flex" style={{ width: "100%" }}>
+            <MenuDashboard />
 
-          <div className="container">
-            <div className="py-3 d-flex justify-content-between border-bottom">
-              <div>
-                <i className="fa-solid fa-cart-plus me-1"></i>Dashboard
+            <div style={{ width: "86%" }}>
+              <div className="d-flex justify-content-between">
+                <h5>Product List Management</h5>
+                <button
+                  type="button"
+                  className="btn btn-warning"
+                  onClick={() => handleShowFormCreateProduct()}
+                >
+                  <i className="fa-solid fa-plus "></i>
+                  Add new Product
+                </button>
               </div>
-              <a
-                id="goProduct"
-                onClick={() => {
-                  setShowProduct(true);
-                  setShowDashboard(false);
-                }}
-              >
-                Anh Tuấn <i className="fa-solid fa-right-to-bracket ms-1"></i>
-              </a>
-            </div>
-          </div>
-          <div className="container my-2 d-flex">
-            <div className="d-flex" style={{ width: "100%" }}>
-              <MenuDashboard setCheckCRUDProduct={setCheckCRUDProduct} />
-
-              {!checkCRUDProduct &&
-                (!billInformation ? (
-                  <div className="" style={{ width: "86%" }}>
-                    <OrderManagement
-                      fontSize={16}
-                      listBill={listBill}
-                      handleShowContentBill={handleShowContentBill}
-                    />
-                  </div>
-                ) : (
-                  <div className="" style={{ width: "51%" }}>
-                    <OrderManagement
-                      fontSize={13}
-                      listBill={listBill}
-                      handleShowContentBill={handleShowContentBill}
-                    />
-                  </div>
-                ))}
-              {checkCRUDProduct && (
-                <div style={{ width: "86%" }}>
-                  <div className="d-flex justify-content-between">
-                    <h5>Product List Management</h5>
-                    <button
-                      type="button"
-                      className="btn btn-warning"
-                      onClick={() => handleShowFormCreateProduct()}
-                    >
-                      <i className="fa-solid fa-plus "></i>
-                      Add new Product
-                    </button>
-                  </div>
-                  {showFormAddProduct && (
-                    <div className="my-3 ">
-                      <ModalCreateProduct
-                        handleSubmitFormAdd={handleSubmitFormAdd}
-                        setTitle={setTitle}
-                        title={title}
-                        setPrice={setPrice}
-                        price={price}
-                        setShowFormAddProduct={setShowFormAddProduct}
-                        setCategory={setCategory}
-                        category={category}
-                        company={company}
-                        color={color}
-                        setColor={setColor}
-                        setCompany={setCompany}
-                        url={url}
-                        handleImageChange={handleImageChange}
-                      />
-                    </div>
-                  )}
-                  <div>
-                    <div className="d-flex">
-                      <SortDashboard
-                        sort={sort}
-                        setSort={setSort}
-                        setSortCheck={setSortCheck}
-                        sortCheck={sortCheck}
-                      />
-                    </div>
-                    <div>
-                      <ProductListDashboard
-                        product={product}
-                        handleShow={handleShow}
-                        handleDeleteProduct={handleDeleteProduct}
-                      />
-                    </div>
-                    <Pagination
-                      setPageNumber={setPageNumber}
-                      pageNumber={pageNumber}
-                      totalPage={totalPage}
-                      element={element}
-                      setElement={setElement}
-                    />
-                  </div>
+              {showFormAddProduct && (
+                <div className="my-3 ">
+                  <ModalCreateProduct
+                    handleSubmitFormAdd={handleSubmitFormAdd}
+                    setTitle={setTitle}
+                    title={title}
+                    setPrice={setPrice}
+                    price={price}
+                    setShowFormAddProduct={setShowFormAddProduct}
+                    setCategory={setCategory}
+                    category={category}
+                    company={company}
+                    color={color}
+                    setColor={setColor}
+                    setCompany={setCompany}
+                    url={url}
+                    handleImageChange={handleImageChange}
+                  />
                 </div>
               )}
-            </div>
-            {!checkCRUDProduct && billInformation && (
               <div>
-                {<BillInformation billId={billId} setBillInformation={setBillInformation} />}
+                <div className="d-flex">
+                  <SortDashboard
+                    sort={sort}
+                    setSort={setSort}
+                    setSortCheck={setSortCheck}
+                    sortCheck={sortCheck}
+                  />
+                </div>
+                <div>
+                  <ProductListDashboard
+                    product={product}
+                    handleShow={handleShow}
+                    handleDeleteProduct={handleDeleteProduct}
+                  />
+                </div>
+                <Pagination
+                  setPageNumber={setPageNumber}
+                  pageNumber={pageNumber}
+                  totalPage={totalPage}
+                  element={element}
+                  setElement={setElement}
+                />
               </div>
-            )}
+            </div>
           </div>
-        </Fragment>
-      )}
-
-      {showProduct && <ProductShop />}
+        </div>
+      </Fragment>
     </Fragment>
   );
 }
-export default DashboardOrder;
