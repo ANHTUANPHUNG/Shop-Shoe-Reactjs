@@ -5,18 +5,18 @@ import { MenuDashboard } from "../MenuDashboard";
 import { NavLink } from "react-router-dom";
 import { LayoutDashboard } from "../LayoutDashboard";
 
-export function BillDashboard() {
+export function BillDashboard({ data, setData }) {
   const [listBill, setListBill] = useState([]);
   const [billId, setBillId] = useState([]);
   const [billInformation, setBillInformation] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`http://localhost:3300/billDetail`);
+      // const response = await fetch(`http://localhost:3300/billDetail`);
 
-      const res = await response.json();
+      // const res = await response.json();
 
-      setListBill(res);
+      setListBill(data.billDetail);
     };
 
     fetchData();
@@ -30,7 +30,7 @@ export function BillDashboard() {
   };
   return (
     <Fragment>
-      <LayoutDashboard/>
+      <LayoutDashboard />
       <div className="container my-2 d-flex">
         <div className="d-flex" style={{ width: "100%" }}>
           <MenuDashboard />

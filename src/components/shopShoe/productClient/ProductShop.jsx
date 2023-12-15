@@ -9,7 +9,9 @@ import PriceFilter from "./PriceFilter";
 import RecommendedFilter from "./RecommendedFilter ";
 import ShowProductFilter from "./ShowProductFilter";
 import { NavLink } from "react-router-dom";
-function ProductShop() {
+function ProductShop({ data, setData }) {
+  // const {product,cartDetail,billDetail, categories, colors, companies, prices} = data
+  console.log(data);
   const [productList, setProductList] = useState([]);
   const [productListSearch, setProductListSearch] = useState([]);
   const [companies, setCompanies] = useState([]);
@@ -27,26 +29,27 @@ function ProductShop() {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
-      const productLists = await fetch(`http://localhost:3300/product`);
-      const result = await productLists.json();
-      setProductList(result);
-      setProductListSearch(result);
+      // const productLists = await fetch(`http://localhost:3300/product`);
+      // const result = await productLists.json();
 
-      const colorList = await fetch(`http://localhost:3300/colors`);
-      const resultColors = await colorList.json();
-      setColors(resultColors);
+      setProductList(data.product);
+      // setProductListSearch(data.product);
 
-      const categoryList = await fetch(`http://localhost:3300/categories`);
-      const resultCategory = await categoryList.json();
-      setCategories(resultCategory);
+      // const colorList = await fetch(`http://localhost:3300/colors`);
+      // const resultColors = await colorList.json();
+      setColors(data.colors);
 
-      const companyList = await fetch(`http://localhost:3300/companies`);
-      const resultCompany = await companyList.json();
-      setCompanies(resultCompany);
+      // const categoryList = await fetch(`http://localhost:3300/categories`);
+      // const resultCategory = await categoryList.json();
+      setCategories(data.categories);
 
-      const priceList = await fetch(`http://localhost:3300/prices`);
-      const resultPrice = await priceList.json();
-      setPrices(resultPrice);
+      // const companyList = await fetch(`http://localhost:3300/companies`);
+      // const resultCompany = await companyList.json();
+      setCompanies(data.companies);
+
+      // const priceList = await fetch(`http://localhost:3300/prices`);
+      // const resultPrice = await priceList.json();
+      setPrices(data.prices);
     };
     fetchData();
   }, []);
@@ -78,48 +81,60 @@ function ProductShop() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const billDetailApi = await fetch(`http://localhost:3300/cartDetail`);
-      const resultBill = await billDetailApi.json();
-      setBillDetailApi(resultBill);
+      // const billDetailApi = await fetch(`http://localhost:3300/cartDetail`);
+      // const resultBill = await billDetailApi.json();
+      setBillDetailApi(data.cartDetail);
     };
     fetchData();
   }, [triggerUpdate]);
 
   const addToCartDetail = async (product) => {
-    const response = await fetch("http://localhost:3300/cartDetail", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(product),
-    });
-    if (response.ok) {
-      toast.success("Product is added to the cart");
-      setBillDetailApi(product);
-      setTriggerUpdate((prev) => !prev);
-    } else {
-      toast.error("Add failed product", {
-        theme: "light",
-      });
-    }
+    // const response = await fetch("http://localhost:3300/cartDetail", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(product),
+    // });
+    // if (response.ok) {
+    //   toast.success("Product is added to the cart");
+    //   setBillDetailApi(product);
+    //   setTriggerUpdate((prev) => !prev);
+    // } else {
+    //   toast.error("Add failed product", {
+    //     theme: "light",
+    //   });
+    // }
+    toast.success("Product is added to the cart");
+    setData({ ...data, cartDetail: [...data.cartDetail, product] });
+    setTriggerUpdate((prev) => !prev);
   };
 
   const updateCartDetail = async (id, updatedProduct) => {
-    const response = await fetch("http://localhost:3300/cartDetail/" + id, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedProduct),
-    });
-    if (response.ok) {
-      toast.info("Add product successfully");
-      setTriggerUpdate((prev) => !prev);
-    } else {
-      toast.error("Add failed product", {
-        theme: "light",
-      });
-    }
+    // const response = await fetch("http://localhost:3300/cartDetail/" + id, {
+    //   method: "PATCH",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(updatedProduct),
+    // });
+    // if (response.ok) {
+    //   toast.info("Add product successfully");
+    //   setTriggerUpdate((prev) => !prev);
+    // } else {
+    //   toast.error("Add failed product", {
+    //     theme: "light",
+    //   });
+    // }
+    const updatedProductList = billDetailApi.map(product =>
+      product.id === id
+        ? { ...product, quantity: (product.quantity || 0) + 1 }
+        : product
+    );
+  
+    toast.info("Add product successfully");
+    setTriggerUpdate((prev) => !prev);
+    setBillDetailApi(updatedProductList);
   };
 
   const handleListProductDetail = (index) => {
@@ -225,10 +240,21 @@ function ProductShop() {
             activeButton={activeButton}
             handleCheckCompany={handleCheckCompany}
           />
-          <ShowProductFilter
+          {productListSearch == '' ? (
+            <ShowProductFilter
+              productListSearch={productList}
+              handleListProductDetail={handleListProductDetail}
+            />
+          ) : (
+            <ShowProductFilter
+              productListSearch={productListSearch}
+              handleListProductDetail={handleListProductDetail}
+            />
+          )}
+          {/* <ShowProductFilter
             productListSearch={productListSearch}
             handleListProductDetail={handleListProductDetail}
-          />
+          /> */}
         </div>
       </div>
 

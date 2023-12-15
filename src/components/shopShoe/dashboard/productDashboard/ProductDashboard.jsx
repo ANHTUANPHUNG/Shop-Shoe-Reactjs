@@ -9,8 +9,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { LayoutDashboard } from "../LayoutDashboard";
 
-export function ProductDashboard() {
-  const [checkCRUDProduct, setCheckCRUDProduct] = useState(false);
+export function ProductDashboard({ data, setData }) {
   const [showFormAddProduct, setShowFormAddProduct] = useState(false);
   const [product, setProduct] = useState([]);
   const [checkListProduct, setCheckListProduct] = useState([]);
@@ -109,13 +108,14 @@ export function ProductDashboard() {
     });
 
     if (result.isConfirmed) {
-      const response = await fetch("http://localhost:3300/product/" + id, {
-        method: "DELETE",
+      // Xóa sản phẩm từ data.product
+      setData((prevData) => {
+        const updatedProduct = prevData.product.filter((product) => product.id !== id);
+        return { ...prevData, product: updatedProduct };
       });
-      if (response.ok) {
-        setCheckListProduct((prev) => !prev);
-        toast.error("Deleted successfully");
-      }
+
+      setCheckListProduct((prev) => !prev);
+      toast.error("Deleted successfully");
     }
   };
   const handleShow = (id) => {
@@ -132,42 +132,36 @@ export function ProductDashboard() {
     setShowFormAddProduct(false);
   };
   const handleSubmitFormUpdate = async (e) => {
-    let productUpdate = product.find((e) => e.id == idProduct);
-    if (title == "" || price == "" || category == "" || color == "" || company == "" || url == "") {
+    if (title === "" || price === "" || category === "" || color === "" || company === "" || url === "") {
       toast.error("Fill in all required fields");
       return;
     }
-    productUpdate = {
-      title: title,
-      star: 4,
-      reviews: 123,
-      img: url,
-      newPrice: price,
-      company: company,
-      color: color,
-      category: category,
-      prevPrice: prevPrice,
-    };
-
-    const response = await fetch("http://localhost:3300/product/" + idProduct, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(productUpdate),
+  
+    // Tìm sản phẩm cần cập nhật trong data.product
+    const updatedProduct = data.product.find((product) => product.id === idProduct);
+  
+    // Cập nhật thông tin sản phẩm
+    updatedProduct.title = title;
+    updatedProduct.star = 4;
+    updatedProduct.reviews = 123;
+    updatedProduct.img = url;
+    updatedProduct.newPrice = price;
+    updatedProduct.company = company;
+    updatedProduct.color = color;
+    updatedProduct.category = category;
+    updatedProduct.prevPrice = prevPrice;
+  
+    // Cập nhật data.product trong state
+    setData((prevData) => {
+      const updatedProductList = prevData.product.map((product) => (product.id === idProduct ? updatedProduct : product));
+      return { ...prevData, product: updatedProductList };
     });
-
-    if (response.ok) {
-      toast.info("Update successful products");
-      setCheckListProduct((prev) => !prev);
-
-      setShow(false);
-    } else {
-      toast.error("Update failed product", {
-        theme: "light",
-      });
-    }
+  
+    toast.info("Update successful products");
+    setCheckListProduct((prev) => !prev);
+    setShow(false);
   };
+  
   const handleShowFormCreateProduct = () => (
     setPrice(""),
     setTitle(""),
@@ -180,30 +174,28 @@ export function ProductDashboard() {
   const handleClose = () => setShow(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(`http://localhost:3300/product`);
-      const res = await response.json();
-      const start = (pageNumber - 1) * element;
-      const end = start + Number(element);
-      const sortedItems = [...res].sort((a, b) => {
-        return b.id - a.id;
-      });
-      const displayedProducts = sortedItems.slice(start, end);
-
-      setProduct(displayedProducts);
-      const number = Math.ceil(res.length / element);
-      setTotalPage(number);
-    };
-    fetchData();
-  }, [pageNumber, checkListProduct, element]);
-
+    const start = (pageNumber - 1) * element;
+    const end = start + Number(element);
+  
+    const sortedItems = [...data.product].sort((a, b) => {
+      return b.id - a.id;
+    });
+    const displayedProducts = sortedItems.slice(start, end);
+  
+    setProduct(displayedProducts);
+    const number = Math.ceil(data.product.length / element);
+    setTotalPage(number);
+  }, [pageNumber, checkListProduct, element, data.product]);
+  
   const handleSubmitFormAdd = async (e) => {
     e.preventDefault();
-    if (title == "" || price == "" || category == "" || color == "" || company == "" || url == "") {
+    if (title === "" || price === "" || category === "" || color === "" || company === "" || url === "") {
       toast.error("Fill in all required fields");
       return;
     }
-    const product = {
+    
+    const newProduct = {
+      id: Math.floor(Math.random() * 1000), // Tạo một id ngẫu nhiên, bạn có thể thay đổi cách tạo id này tùy theo cách bạn lưu dữ liệu.
       title: title,
       star: 4,
       reviews: 123,
@@ -214,30 +206,23 @@ export function ProductDashboard() {
       category: category,
       prevPrice: 0,
     };
-
-    const response = await fetch("http://localhost:3300/product", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(product),
-    });
-
-    if (response.ok) {
-      toast.success("Create successful products");
-      setCheckListProduct((prev) => !prev);
-      setPrice("");
-      setTitle("");
-      setCompany("");
-      setCategory("");
-      setColor("");
-      setUrl("");
-    } else {
-      toast.error("Create failed product", {
-        theme: "light",
-      });
-    }
+  
+    // Thêm sản phẩm mới vào data.product
+    setData((prevData) => ({
+      ...prevData,
+      product: [...prevData.product, newProduct],
+    }));
+  
+    toast.success("Create successful products");
+    setCheckListProduct((prev) => !prev);
+    setPrice("");
+    setTitle("");
+    setCompany("");
+    setCategory("");
+    setColor("");
+    setUrl("");
   };
+  
   return (
     <Fragment>
       <Fragment>

@@ -415,34 +415,7 @@
       }
     ],
     "cartDetail": [
-      {
-        "img": "https://m.media-amazon.com/images/I/41M54ztS6IL._AC_SY625._SX._UX._SY._UY_.jpg",
-        "title": "Flat Slip On Pumps",
-        "star": 4,
-        "reviews": 123,
-        "prevPrice": "170",
-        "newPrice": "200",
-        "company": "Vans",
-        "color": "Green",
-        "category": "Flats",
-        "id": 5,
-        "quantity": 1,
-        "total": "170"
-      },
-      {
-        "img": "https://res.cloudinary.com/dw4xpd646/image/upload/v1702423508/Cloudinary-React/mtj2w0fiizfpxwm9cuzc.webp",
-        "title": "Voluptas cumque sit",
-        "star": 4,
-        "reviews": 123,
-        "prevPrice": "20",
-        "newPrice": "831",
-        "company": "Adidas",
-        "color": "Blue",
-        "category": "Heels",
-        "id": 6,
-        "quantity": 1,
-        "total": "20"
-      }
+     
     ],
     "billDetail": [
       {
