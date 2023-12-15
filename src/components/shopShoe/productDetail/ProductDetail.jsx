@@ -92,9 +92,12 @@ function ProductDetail() {
       body: JSON.stringify(updatedProduct),
     });
     if (response.ok) {
-      setProductDetailCustomer((prevProducts) =>
-        prevProducts.map((product) => (product.id === id ? updatedProduct : product))
-      );
+      const newProduct = [...productDetailCustomer]
+      newProduct[id] = updatedProduct
+      setProductDetailCustomer(newProduct)
+      // setProductDetailCustomer((prevProducts) =>
+      //   prevProducts.map((product) => (product.id === id ? updatedProduct : product))
+      // );
       setCheckCartDetail((prev) => !prev);
       toast.info("Successful change");
     } else {
