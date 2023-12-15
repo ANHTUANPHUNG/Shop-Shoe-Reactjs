@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, createContext, useState } from 'react';
 import './App.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,21 +10,25 @@ import Page404 from './components/shopShoe/Page404';
 import { BillDashboard } from './components/shopShoe/dashboard/billDashboard/BillDashboard';
 import { ProductDashboard } from './components/shopShoe/dashboard/productDashboard/ProductDashboard';
 
+
+export const ThemeContext = createContext()
+
 function App() {
   const [data, setData] = useState(newData)
-  // const {product,cartDetail,billDetail, categories, colors, companies, prices} = data
+  const value = {data,setData} 
   return (
-    
-    <Fragment>
+    <ThemeContext.Provider value={value}>
+      <Fragment>
       <ToastContainer autoClose={3000} theme='colored' />
       <Routes>
-        <Route path='/' element={<ProductShop data= {data} setData={setData}  />}></Route>
-        <Route path='/cartUser' element={<ProductDetail data= {data} setData={setData} />}></Route>
-        <Route path='/dashboard' element={<BillDashboard data= {data}  setData={setData} />}/>
-        <Route path='/dashboard/product' element={<ProductDashboard data= {data}  setData={setData} />}/>
+        <Route path='/' element={<ProductShop/>}></Route>
+        <Route path='/cartUser' element={<ProductDetail/>}></Route>
+        <Route path='/dashboard' element={<BillDashboard/>}/>
+        <Route path='/dashboard/product' element={<ProductDashboard/>}/>
         <Route path='*' element={<Page404 />} ></Route>
       </Routes>
-    </Fragment>
+      </Fragment>
+    </ThemeContext.Provider>
   );
 }
 

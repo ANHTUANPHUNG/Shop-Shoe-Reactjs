@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ThemeProductShop } from "./ProductShop";
 
-const PriceFilter = ({ prices, setPricesSearch }) => {
+const PriceFilter = () => {
+  const { prices, setPricesSearch } = useContext(ThemeProductShop)
   return (
     <div className="py-2  justify-content-center">
       <h5>Price</h5>

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { MenuDashboard } from "../MenuDashboard";
 import { ModalCreateProduct } from "./ModalCreateProduct";
 import { SortDashboard } from "./SortDashboard";
@@ -8,8 +8,10 @@ import { ModalUpdateProduct } from "./ModalUpdateProduct";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { LayoutDashboard } from "../LayoutDashboard";
+import { ThemeContext } from "../../../../App";
 
-export function ProductDashboard({ data, setData }) {
+export function ProductDashboard() {
+  const {data,setData} = useContext(ThemeContext)
   const [showFormAddProduct, setShowFormAddProduct] = useState(false);
   const [product, setProduct] = useState([]);
   const [checkListProduct, setCheckListProduct] = useState([]);

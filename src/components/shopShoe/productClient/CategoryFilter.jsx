@@ -1,7 +1,9 @@
 // CategoryFilter.jsx
-import React from "react";
+import React, { useContext } from "react";
+import { ThemeProductShop } from "./ProductShop";
 
-const CategoryFilter = ({ categories, setCategoriesSearch }) => {
+const CategoryFilter = () => {
+  const { categories, setCategoriesSearch } = useContext(ThemeProductShop)
   return (
     <div className="py-2  justify-content-center">
       <h5>Category</h5>

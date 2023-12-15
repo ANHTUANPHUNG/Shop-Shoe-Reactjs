@@ -1,7 +1,9 @@
 // ColorFilter.jsx
-import React from "react";
+import React, { useContext } from "react";
+import { ThemeProductShop } from "./ProductShop";
 
-const ColorFilter = ({ colors, setColorsSearch }) => {
+const ColorFilter = () => {
+  const { colors, setColorsSearch } = useContext(ThemeProductShop)
   return (
     <div className="py-2  justify-content-center">
       <h5>Colors</h5>

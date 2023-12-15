@@ -1,6 +1,5 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext, createContext } from "react";
 import InputSearch from "./InputSearch";
-import ProductDetail from "../productDetail/ProductDetail";
 import { toast } from "react-toastify";
 
 import ColorFilter from "./ColorFilter";
@@ -9,9 +8,12 @@ import PriceFilter from "./PriceFilter";
 import RecommendedFilter from "./RecommendedFilter ";
 import ShowProductFilter from "./ShowProductFilter";
 import { NavLink } from "react-router-dom";
-function ProductShop({ data, setData }) {
-  // const {product,cartDetail,billDetail, categories, colors, companies, prices} = data
-  console.log(data);
+import { ThemeContext } from "../../../App";
+
+export const ThemeProductShop = createContext();
+
+function ProductShop() {
+  const { data, setData } = useContext(ThemeContext);
   const [productList, setProductList] = useState([]);
   const [productListSearch, setProductListSearch] = useState([]);
   const [companies, setCompanies] = useState([]);
@@ -27,28 +29,15 @@ function ProductShop({ data, setData }) {
   const [showGoToTop, setShowGoToTop] = useState(false);
   const [billDetailApi, setBillDetailApi] = useState([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
-      // const productLists = await fetch(`http://localhost:3300/product`);
-      // const result = await productLists.json();
-
       setProductList(data.product);
-      // setProductListSearch(data.product);
 
-      // const colorList = await fetch(`http://localhost:3300/colors`);
-      // const resultColors = await colorList.json();
       setColors(data.colors);
 
-      // const categoryList = await fetch(`http://localhost:3300/categories`);
-      // const resultCategory = await categoryList.json();
       setCategories(data.categories);
-
-      // const companyList = await fetch(`http://localhost:3300/companies`);
-      // const resultCompany = await companyList.json();
       setCompanies(data.companies);
-
-      // const priceList = await fetch(`http://localhost:3300/prices`);
-      // const resultPrice = await priceList.json();
       setPrices(data.prices);
     };
     fetchData();
@@ -81,57 +70,22 @@ function ProductShop({ data, setData }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      // const billDetailApi = await fetch(`http://localhost:3300/cartDetail`);
-      // const resultBill = await billDetailApi.json();
       setBillDetailApi(data.cartDetail);
     };
     fetchData();
   }, [triggerUpdate]);
 
   const addToCartDetail = async (product) => {
-    // const response = await fetch("http://localhost:3300/cartDetail", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(product),
-    // });
-    // if (response.ok) {
-    //   toast.success("Product is added to the cart");
-    //   setBillDetailApi(product);
-    //   setTriggerUpdate((prev) => !prev);
-    // } else {
-    //   toast.error("Add failed product", {
-    //     theme: "light",
-    //   });
-    // }
     toast.success("Product is added to the cart");
     setData({ ...data, cartDetail: [...data.cartDetail, product] });
     setTriggerUpdate((prev) => !prev);
   };
 
   const updateCartDetail = async (id, updatedProduct) => {
-    // const response = await fetch("http://localhost:3300/cartDetail/" + id, {
-    //   method: "PATCH",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(updatedProduct),
-    // });
-    // if (response.ok) {
-    //   toast.info("Add product successfully");
-    //   setTriggerUpdate((prev) => !prev);
-    // } else {
-    //   toast.error("Add failed product", {
-    //     theme: "light",
-    //   });
-    // }
-    const updatedProductList = billDetailApi.map(product =>
-      product.id === id
-        ? { ...product, quantity: (product.quantity || 0) + 1 }
-        : product
+    const updatedProductList = billDetailApi.map((product) =>
+      product.id === id ? { ...product, quantity: (product.quantity || 0) + 1 } : product
     );
-  
+
     toast.info("Add product successfully");
     setTriggerUpdate((prev) => !prev);
     setBillDetailApi(updatedProductList);
@@ -173,7 +127,18 @@ function ProductShop({ data, setData }) {
       });
     }
   };
-
+  const valueCheck = {
+    categories,
+    prices,
+    colors,
+    companies,
+    setCategoriesSearch,
+    setColorsSearch,
+    setPricesSearch,
+    setCompaniesSearch,
+    handleCheckCompany,
+    activeButton,
+  };
   return (
     <Fragment>
       <div className="d-flex mt-2 py-2 border-bottom align-items-center container">
@@ -224,39 +189,33 @@ function ProductShop({ data, setData }) {
           </div>
         </div>
       </div>
-      <div className="d-flex container">
-        <div style={{ minWidth: "180px" }}>
-          <div className=" border-end me-1 h-100">
-            <CategoryFilter categories={categories} setCategoriesSearch={setCategoriesSearch} />
+      <ThemeProductShop.Provider value={valueCheck}>
+        <div className="d-flex container">
+          <div style={{ minWidth: "180px" }}>
+            <div className=" border-end me-1 h-100">
+              <CategoryFilter />
 
-            <PriceFilter prices={prices} setPricesSearch={setPricesSearch} />
+              <PriceFilter />
 
-            <ColorFilter colors={colors} setColorsSearch={setColorsSearch} />
+              <ColorFilter />
+            </div>
+          </div>
+          <div className="flex-grow-1">
+            <RecommendedFilter />
+            {productListSearch == "" ? (
+              <ShowProductFilter
+                productListSearch={productList}
+                handleListProductDetail={handleListProductDetail}
+              />
+            ) : (
+              <ShowProductFilter
+                productListSearch={productListSearch}
+                handleListProductDetail={handleListProductDetail}
+              />
+            )}
           </div>
         </div>
-        <div className="flex-grow-1">
-          <RecommendedFilter
-            companies={companies}
-            activeButton={activeButton}
-            handleCheckCompany={handleCheckCompany}
-          />
-          {productListSearch == '' ? (
-            <ShowProductFilter
-              productListSearch={productList}
-              handleListProductDetail={handleListProductDetail}
-            />
-          ) : (
-            <ShowProductFilter
-              productListSearch={productListSearch}
-              handleListProductDetail={handleListProductDetail}
-            />
-          )}
-          {/* <ShowProductFilter
-            productListSearch={productListSearch}
-            handleListProductDetail={handleListProductDetail}
-          /> */}
-        </div>
-      </div>
+      </ThemeProductShop.Provider>
 
       {showGoToTop && (
         <button

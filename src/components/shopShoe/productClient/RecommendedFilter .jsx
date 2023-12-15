@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ThemeProductShop } from "./ProductShop";
 
-function RecommendedFilter({ companies, handleCheckCompany, activeButton }) {
+function RecommendedFilter() {
+  const { companies, handleCheckCompany, activeButton } = useContext(ThemeProductShop)
   return (
     <div className="py-2 d-flex flex-column justify-content-center">
       <h5>Recommended</h5>

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import InputSearch from "../productClient/InputSearch";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
@@ -6,7 +6,9 @@ import moment from "moment";
 import ShowProductDetail from "./ShowProductDetail";
 import SubmitFormDetail from "./SubmitFormDetail";
 import { NavLink } from "react-router-dom";
-function ProductDetail({ data, setData }) {
+import { ThemeContext } from "../../../App";
+function ProductDetail() {
+  const {data, setData} = useContext(ThemeContext)
   const [productDetailCustomer, setProductDetailCustomer] = useState([]);
   const [checkCartDetail, setCheckCartDetail] = useState(false);
   const [totalDetail, setTotalDetail] = useState(0);
@@ -15,10 +17,9 @@ function ProductDetail({ data, setData }) {
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
 
+
   useEffect(() => {
     const fetchData = async () => {
-      // const res = await fetch("http://localhost:3300/cartDetail");
-      // const result = await res.json();
       const newTotal = data.cartDetail.reduce(
         (prevValue, curProduct) => prevValue + Number(curProduct.total),
         0
@@ -59,14 +60,6 @@ function ProductDetail({ data, setData }) {
     });
 
     if (result.isConfirmed) {
-      // const response = await fetch("http://localhost:3300/cartDetail/" + id, {
-      //   method: "DELETE",
-      // });
-      // if (response.ok) {
-      //   setProductDetailCustomer(() => productDetailCustomer.map((e) => e.id != id));
-      //   setCheckCartDetail((prev) => !prev);
-      //   toast.error("Deleted successfully");
-      // }
       const updatedCartDetail = data.cartDetail.filter((e) => e.id !== id);
     setData({ ...data, cartDetail: updatedCartDetail });
       setCheckCartDetail((prev) => !prev);
@@ -85,12 +78,9 @@ function ProductDetail({ data, setData }) {
   };
   
   const updateCartDetail = (id, updatedProduct) => {
-    // Cập nhật productDetailCustomer
     setProductDetailCustomer((prevProducts) =>
       prevProducts.map((product) => (product.id === id ? updatedProduct : product))
     );
-  
-    // Cập nhật data
     const updatedCartDetail = data.cartDetail.map((product) =>
       product.id === id ? updatedProduct : product
     );

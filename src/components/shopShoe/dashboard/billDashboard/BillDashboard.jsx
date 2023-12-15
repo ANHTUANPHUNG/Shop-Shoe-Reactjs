@@ -1,21 +1,18 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { BillInformation } from "./BillInformation";
 import { OrderManagement } from "./OrderManagement";
 import { MenuDashboard } from "../MenuDashboard";
-import { NavLink } from "react-router-dom";
 import { LayoutDashboard } from "../LayoutDashboard";
+import { ThemeContext } from "../../../../App";
 
-export function BillDashboard({ data, setData }) {
+export function BillDashboard() {
+  const {data,setData} = useContext(ThemeContext)
   const [listBill, setListBill] = useState([]);
   const [billId, setBillId] = useState([]);
   const [billInformation, setBillInformation] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      // const response = await fetch(`http://localhost:3300/billDetail`);
-
-      // const res = await response.json();
-
       setListBill(data.billDetail);
     };
 
