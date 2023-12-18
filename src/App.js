@@ -20,7 +20,6 @@ function App() {
         <Route path='/cartUser' element={<ProductDetail/>}></Route>
         <Route path='/dashboard' element={<BillDashboard/>}/>
         <Route path='/dashboard/product' element={<ProductDashboard/>}/>
-        
         <Route path='*' element={<Page404 />} ></Route>
       </Routes>
     </Fragment>

@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import InputSearch from "./InputSearch";
-import ProductDetail from "../productDetail/ProductDetail";
+
 import { toast } from "react-toastify";
 
 import ColorFilter from "./ColorFilter";
