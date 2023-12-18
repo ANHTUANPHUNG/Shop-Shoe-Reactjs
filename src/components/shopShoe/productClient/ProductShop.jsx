@@ -27,24 +27,28 @@ function ProductShop() {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
-      const productLists = await fetch(`http://localhost:3300/product`);
+      const productLists = await fetch(`http://localhost:3000/product`);
       const result = await productLists.json();
       setProductList(result);
-      setProductListSearch(result);
+      const sortedItems = [...result].sort((a, b) => {
+        return b.id - a.id;
+      });
+      // const displayedProducts = sortedItems.slice(start, end);
+      setProductListSearch(sortedItems);
 
-      const colorList = await fetch(`http://localhost:3300/colors`);
+      const colorList = await fetch(`http://localhost:3000/colors`);
       const resultColors = await colorList.json();
       setColors(resultColors);
 
-      const categoryList = await fetch(`http://localhost:3300/categories`);
+      const categoryList = await fetch(`http://localhost:3000/categories`);
       const resultCategory = await categoryList.json();
       setCategories(resultCategory);
 
-      const companyList = await fetch(`http://localhost:3300/companies`);
+      const companyList = await fetch(`http://localhost:3000/companies`);
       const resultCompany = await companyList.json();
       setCompanies(resultCompany);
 
-      const priceList = await fetch(`http://localhost:3300/prices`);
+      const priceList = await fetch(`http://localhost:3000/prices`);
       const resultPrice = await priceList.json();
       setPrices(resultPrice);
     };
@@ -78,7 +82,7 @@ function ProductShop() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const billDetailApi = await fetch(`http://localhost:3300/cartDetail`);
+      const billDetailApi = await fetch(`http://localhost:3000/cartDetail`);
       const resultBill = await billDetailApi.json();
       setBillDetailApi(resultBill);
     };
@@ -86,7 +90,7 @@ function ProductShop() {
   }, [triggerUpdate]);
 
   const addToCartDetail = async (product) => {
-    const response = await fetch("http://localhost:3300/cartDetail", {
+    const response = await fetch("http://localhost:3000/cartDetail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -105,7 +109,7 @@ function ProductShop() {
   };
 
   const updateCartDetail = async (id, updatedProduct) => {
-    const response = await fetch("http://localhost:3300/cartDetail/" + id, {
+    const response = await fetch("http://localhost:3000/cartDetail/" + id, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

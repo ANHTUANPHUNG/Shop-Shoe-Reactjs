@@ -17,7 +17,7 @@ function ProductDetail() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("http://localhost:3300/cartDetail");
+      const res = await fetch("http://localhost:3000/cartDetail");
       const result = await res.json();
       const newTotal = result.reduce(
         (prevValue, curProduct) => prevValue + Number(curProduct.total),
@@ -59,7 +59,7 @@ function ProductDetail() {
     });
 
     if (result.isConfirmed) {
-      const response = await fetch("http://localhost:3300/cartDetail/" + id, {
+      const response = await fetch("http://localhost:3000/cartDetail/" + id, {
         method: "DELETE",
       });
       if (response.ok) {
@@ -74,7 +74,7 @@ function ProductDetail() {
       return index.concat(valueSubmit.id);
     }, []);
     reduceDelete.forEach(async (id) => {
-      const response = await fetch("http://localhost:3300/cartDetail/" + id, {
+      const response = await fetch("http://localhost:3000/cartDetail/" + id, {
         method: "DELETE",
       });
       if (response.ok) {
@@ -84,7 +84,7 @@ function ProductDetail() {
   };
 
   const updateCartDetail = async (id, updatedProduct) => {
-    const response = await fetch("http://localhost:3300/cartDetail/" + id, {
+    const response = await fetch("http://localhost:3000/cartDetail/" + id, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -124,7 +124,7 @@ function ProductDetail() {
       ship: "FREE",
     };
     const pushBillDetail = async () => {
-      const response = await fetch("http://localhost:3300/billDetail/", {
+      const response = await fetch("http://localhost:3000/billDetail/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
