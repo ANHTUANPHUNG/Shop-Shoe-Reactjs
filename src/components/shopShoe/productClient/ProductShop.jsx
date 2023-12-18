@@ -33,7 +33,6 @@ function ProductShop() {
       const sortedItems = [...result].sort((a, b) => {
         return b.id - a.id;
       });
-      // const displayedProducts = sortedItems.slice(start, end);
       setProductListSearch(sortedItems);
 
       const colorList = await fetch(`https://json-server-shoe-shop.vercel.app/colors`);
@@ -109,6 +108,7 @@ function ProductShop() {
   };
 
   const updateCartDetail = async (id, updatedProduct) => {
+    console.log(updatedProduct);
     const response = await fetch("https://json-server-shoe-shop.vercel.app/cartDetail/" + id, {
       method: "PATCH",
       headers: {
