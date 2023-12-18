@@ -130,8 +130,14 @@ function ProductShop() {
     let existingProductDetail = billDetailApi.find((product) => product.id == index);
     if (existingProductDetail) {
       existingProductDetail.quantity += 1;
-      existingProductDetail.total =
+      if( existingProductDetail.prevPrice == 0){
+        existingProductDetail.total =
+        existingProductDetail.quantity * existingProductDetail.newPrice;
+      } else {
+        existingProductDetail.total =
         existingProductDetail.quantity * existingProductDetail.prevPrice;
+      }
+      
       updateCartDetail(existingProductDetail.id, existingProductDetail);
       setBillDetailApi((prev) =>
         prev.id == existingProductDetail.id ? existingProductDetail : prev
