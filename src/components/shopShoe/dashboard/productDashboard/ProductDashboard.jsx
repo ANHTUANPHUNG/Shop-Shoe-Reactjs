@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 import { LayoutDashboard } from "../LayoutDashboard";
 
 export function ProductDashboard() {
-  const [checkCRUDProduct, setCheckCRUDProduct] = useState(false);
   const [showFormAddProduct, setShowFormAddProduct] = useState(false);
   const [product, setProduct] = useState([]);
   const [checkListProduct, setCheckListProduct] = useState([]);
