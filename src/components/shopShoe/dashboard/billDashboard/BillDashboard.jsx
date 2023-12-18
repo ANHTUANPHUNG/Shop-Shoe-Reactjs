@@ -12,7 +12,7 @@ export function BillDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`http://localhost:3000/billDetail`);
+      const response = await fetch(`https://json-server-shoe-shop.vercel.app/billDetail`);
 
       const res = await response.json();
 

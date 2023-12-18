@@ -109,7 +109,7 @@ export function ProductDashboard() {
     });
 
     if (result.isConfirmed) {
-      const response = await fetch("http://localhost:3000/product/" + id, {
+      const response = await fetch("https://json-server-shoe-shop.vercel.app/product/" + id, {
         method: "DELETE",
       });
       if (response.ok) {
@@ -149,7 +149,7 @@ export function ProductDashboard() {
       prevPrice: prevPrice,
     };
 
-    const response = await fetch("http://localhost:3000/product/" + idProduct, {
+    const response = await fetch("https://json-server-shoe-shop.vercel.app/product/" + idProduct, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -181,7 +181,7 @@ export function ProductDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`http://localhost:3000/product`);
+      const response = await fetch(`https://json-server-shoe-shop.vercel.app/product`);
       const res = await response.json();
       const start = (pageNumber - 1) * element;
       const end = start + Number(element);
@@ -215,7 +215,7 @@ export function ProductDashboard() {
       prevPrice: 0,
     };
 
-    const response = await fetch("http://localhost:3000/product", {
+    const response = await fetch("https://json-server-shoe-shop.vercel.app/product", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

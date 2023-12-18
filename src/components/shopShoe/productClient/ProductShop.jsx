@@ -27,7 +27,7 @@ function ProductShop() {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
-      const productLists = await fetch(`http://localhost:3000/product`);
+      const productLists = await fetch(`https://json-server-shoe-shop.vercel.app/product`);
       const result = await productLists.json();
       setProductList(result);
       const sortedItems = [...result].sort((a, b) => {
@@ -36,19 +36,19 @@ function ProductShop() {
       // const displayedProducts = sortedItems.slice(start, end);
       setProductListSearch(sortedItems);
 
-      const colorList = await fetch(`http://localhost:3000/colors`);
+      const colorList = await fetch(`https://json-server-shoe-shop.vercel.app/colors`);
       const resultColors = await colorList.json();
       setColors(resultColors);
 
-      const categoryList = await fetch(`http://localhost:3000/categories`);
+      const categoryList = await fetch(`https://json-server-shoe-shop.vercel.app/categories`);
       const resultCategory = await categoryList.json();
       setCategories(resultCategory);
 
-      const companyList = await fetch(`http://localhost:3000/companies`);
+      const companyList = await fetch(`https://json-server-shoe-shop.vercel.app/companies`);
       const resultCompany = await companyList.json();
       setCompanies(resultCompany);
 
-      const priceList = await fetch(`http://localhost:3000/prices`);
+      const priceList = await fetch(`https://json-server-shoe-shop.vercel.app/prices`);
       const resultPrice = await priceList.json();
       setPrices(resultPrice);
     };
@@ -82,7 +82,7 @@ function ProductShop() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const billDetailApi = await fetch(`http://localhost:3000/cartDetail`);
+      const billDetailApi = await fetch(`https://json-server-shoe-shop.vercel.app/cartDetail`);
       const resultBill = await billDetailApi.json();
       setBillDetailApi(resultBill);
     };
@@ -90,7 +90,7 @@ function ProductShop() {
   }, [triggerUpdate]);
 
   const addToCartDetail = async (product) => {
-    const response = await fetch("http://localhost:3000/cartDetail", {
+    const response = await fetch("https://json-server-shoe-shop.vercel.app/cartDetail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -109,7 +109,7 @@ function ProductShop() {
   };
 
   const updateCartDetail = async (id, updatedProduct) => {
-    const response = await fetch("http://localhost:3000/cartDetail/" + id, {
+    const response = await fetch("https://json-server-shoe-shop.vercel.app/cartDetail/" + id, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
