@@ -15,6 +15,8 @@ export function ModalCreateProduct({
   setCompany,
   url,
   handleImageChange,
+  setPrevPrice,
+  prevPrice
 }) {
   return (
     <form className="row" onSubmit={(e) => handleSubmitFormAdd(e)}>
@@ -41,7 +43,7 @@ export function ModalCreateProduct({
         </div>
         <div>
           <label htmlFor="price" className="form-label">
-            Price
+           New Price
           </label>
           <input
             onInput={(e) => setPrice(e.target.value)}
@@ -60,22 +62,26 @@ export function ModalCreateProduct({
           )}
         </div>
         <div>
-          <div className="d-flex ">
-            <button style={{ width: "145px" }} className="btn btn-success btn-sm mt-3  ">
-              Add
-            </button>
-            <button
-              style={{ width: "145px" }}
-              className="btn btn-dark btn-sm mt-3 ms-3"
-              type="button"
-              onClick={() => {
-                setShowFormAddProduct(false);
-              }}
-            >
-              Close
-            </button>
-          </div>
+          <label htmlFor="price" className="form-label">
+           Prev Price
+          </label>
+          <input
+            onInput={(e) => setPrevPrice(e.target.value)}
+            value={prevPrice}
+            type="text"
+            placeholder="Input"
+            id="price"
+            className="form-control form-control-sm"
+          />
+          {price == "" ? (
+            <label htmlFor="price" style={{ color: "red" }} className="form-label">
+              Price is a required field
+            </label>
+          ) : (
+            ""
+          )}
         </div>
+        
       </div>
       <div className="col-md-4">
         <div className="form-group">
@@ -196,6 +202,23 @@ export function ModalCreateProduct({
           )}
         </div>
       </div>
+      <div>
+          <div className="d-flex ">
+            <button style={{ width: "145px" }} className="btn btn-success btn-sm mt-3  ">
+              Add
+            </button>
+            <button
+              style={{ width: "145px" }}
+              className="btn btn-dark btn-sm mt-3 ms-3"
+              type="button"
+              onClick={() => {
+                setShowFormAddProduct(false);
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
     </form>
   );
 }

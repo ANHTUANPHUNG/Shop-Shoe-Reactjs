@@ -5,11 +5,13 @@ export function ProductListDashboard({ product, handleShow, handleDeleteProduct 
     <table className="table table-striped table-hover" id="tbRenderProduct">
       <thead className="table-info">
         <tr>
+          <th>#</th>
           <th>Title</th>
           <th>Color</th>
           <th>Category</th>
           <th>Company</th>
-          <th>Price</th>
+          <th>Prev Price</th>
+          <th>New Price</th>
           <th>Rate</th>
           <th>Action</th>
         </tr>
@@ -17,6 +19,7 @@ export function ProductListDashboard({ product, handleShow, handleDeleteProduct 
       <tbody>
         {product.map((e) => (
           <tr key={e.id}>
+            <td>{e.id}</td>
             <td className="d-flex">
               <div className="align-items-center">
                 <img style={{ width: "50px", height: "50px" }} src={e.img} />
@@ -36,8 +39,10 @@ export function ProductListDashboard({ product, handleShow, handleDeleteProduct 
             </td>
             <td className="align-middle">{e.category}</td>
             <td className="align-middle">{e.company}</td>
-            <td>
+            <td className="align-middle">
               <div>${e.prevPrice}</div>
+            </td>
+            <td className="align-middle">
               <div>${e.newPrice}</div>
             </td>
             <td>

@@ -36,16 +36,10 @@ function ShowProductFilter({ productListSearch, handleListProductDetail }) {
                 </div>
                 <div className="align-item-center d-flex " id="priceProduct">
                   <div className="d-flex">
-                    {product.prevPrice != 0 ? (
-                      <Fragment>
-                        <p className="me-2 mb-0 priceReviews text-decoration-line-through">
-                          ${product.newPrice}
-                        </p>
-                        <p className=" mb-0 priceReviews">${product.prevPrice}</p>
-                      </Fragment>
-                    ) : (
-                      <p className="me-2 mb-0 priceReviews ">${product.newPrice}</p>
-                    )}
+                    <p className="  mb-0 me-2 priceReviews text-decoration-line-through">
+                      ${product.prevPrice}
+                    </p>
+                    <p className=" mb-0 priceReviews ">${product.newPrice}</p>
                   </div>
                   <div id="cardProduct" onClick={() => handleListProductDetail(product.id)}>
                     <i className="fa-solid fa-cart-arrow-down"></i>

@@ -130,14 +130,7 @@ function ProductShop() {
     let existingProductDetail = billDetailApi.find((product) => product.id == index);
     if (existingProductDetail) {
       existingProductDetail.quantity += 1;
-      if( existingProductDetail.prevPrice == 0){
-        existingProductDetail.total =
-        existingProductDetail.quantity * existingProductDetail.newPrice;
-      } else {
-        existingProductDetail.total =
-        existingProductDetail.quantity * existingProductDetail.prevPrice;
-      }
-      
+      existingProductDetail.total = existingProductDetail.quantity * existingProductDetail.newPrice;
       updateCartDetail(existingProductDetail.id, existingProductDetail);
       setBillDetailApi((prev) =>
         prev.id == existingProductDetail.id ? existingProductDetail : prev
@@ -145,7 +138,7 @@ function ProductShop() {
     } else {
       let newProduct = productList.find((product) => product.id === index);
       newProduct.quantity = 1;
-      newProduct.total = newProduct.prevPrice;
+      newProduct.total = newProduct.newPrice;
       addToCartDetail(newProduct);
     }
   };

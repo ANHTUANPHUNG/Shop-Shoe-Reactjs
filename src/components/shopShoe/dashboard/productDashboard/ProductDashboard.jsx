@@ -211,7 +211,7 @@ export function ProductDashboard() {
       company: company,
       color: color,
       category: category,
-      prevPrice: 0,
+      prevPrice: prevPrice,
     };
 
     const response = await fetch("https://json-server-shoe-shop.vercel.app/product", {
@@ -231,6 +231,7 @@ export function ProductDashboard() {
       setCategory("");
       setColor("");
       setUrl("");
+      setPrevPrice("");
     } else {
       toast.error("Create failed product", {
         theme: "light",
@@ -285,6 +286,8 @@ export function ProductDashboard() {
                     title={title}
                     setPrice={setPrice}
                     price={price}
+                    prevPrice ={prevPrice}
+                    setPrevPrice ={setPrevPrice}
                     setShowFormAddProduct={setShowFormAddProduct}
                     setCategory={setCategory}
                     category={category}
