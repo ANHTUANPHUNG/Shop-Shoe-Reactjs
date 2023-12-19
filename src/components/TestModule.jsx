@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useEffect } from "react";
 
 const schema = yup
   .object({
@@ -41,9 +42,16 @@ export function TestModule() {
   const {
     register,
     handleSubmit,
+    setValue, 
+
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
   const [show, setShow] = useState(false);
+  const [product, setProduct] = useState([]);
+  const [check, setCheck] = useState(false);
+  const [mode, setMode] = useState("create");
+  const [idProduct, setIdProduct] = useState();
+
   const cityList = [
     {
       id: 1,
@@ -54,7 +62,45 @@ export function TestModule() {
       name: "Quảng Trị",
     },
   ];
-  const onSubmit = (data) => console.log(data);
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(`http://localhost:3300/user`);
+      const res = await response.json();
+      setProduct(res);
+    };
+
+    fetchData();
+  }, [check]);
+  const onSubmit = async (data) => {
+    const url = mode === "create" ? "http://localhost:3300/user" : `http://localhost:3300/user/${idProduct}`;
+
+    const response = await fetch(url, {
+      method: mode === "create" ? "POST" : "PUT", 
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (response.ok) {
+      setCheck((prev) => !prev);
+      setShow(false);
+    }
+  };
+  const handleShowUpdate = (id) => {
+    const productById = product.find((e) => e.id === id);
+    if (productById) {
+      setShow(true);
+      setMode("update");
+      setIdProduct(productById.id);
+      setValue("fullName", productById.fullName);
+      setValue("email", productById.email);
+      setValue("password", productById.password); 
+      setValue("confirmPassword", productById.confirmPassword);
+      setValue("age", productById.age);
+      setValue("gender", productById.gender);
+      setValue("city", productById.city);
+    }
+  };
 
   return (
     <>
@@ -67,7 +113,7 @@ export function TestModule() {
             <h3>List Product</h3>
           </div>
           <div className="me-2">
-            <button className="btn btn-primary" type="button" onClick={() => setShow(true)}>
+            <button className="btn btn-primary" type="button" onClick={() => (setShow(true) , setMode("create"))}>
               Create
             </button>
           </div>
@@ -83,24 +129,22 @@ export function TestModule() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td></td>
-              </tr>
+              {/* {product.map((e) => (
+                <tr key={e.id}>
+                  <td>
+                    <button onClick={() => handleShowUpdate(e.id)}>edit</button>
+                  </td>
+                </tr>
+              ))} */}
             </tbody>
           </table>
         </div>
       </div>
 
       <div>
-        <Modal
-          show={show}
-          onHide={() => setShow(false)}
-          size="lg"
-          aria-labelledby=""
-            centered
-        >
+        <Modal show={show} onHide={() => setShow(false)} size="lg" aria-labelledby="" centered>
           <Modal.Header closeButton>
-            <Modal.Title>Modal Update</Modal.Title>
+            <Modal.Title>Modal {mode === "create" ? "Create" : "Update"}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form className="row needs-validation" onSubmit={handleSubmit(onSubmit)}>
