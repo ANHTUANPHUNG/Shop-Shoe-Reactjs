@@ -70,17 +70,26 @@ function ProductDetail() {
     }
   };
   const deleteAllProductDetail = async (submitForm) => {
-    const reduceDelete = submitForm.product.reduce((index, valueSubmit) => {
-      return index.concat(valueSubmit.id);
-    }, []);
-    reduceDelete.forEach(async (id) => {
-      const response = await fetch("https://json-server-shoe-shop.vercel.app/cartDetail/" + id, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        setCheckCartDetail((prev) => !prev);
-      } else console.log("lỗi");
-    });
+    try {
+      const reduceDelete = submitForm.product.reduce((index, valueSubmit) => {
+        return index.concat(valueSubmit.id);
+      }, []);
+
+      for (const id of reduceDelete) {
+        const response = await fetch("https://json-server-shoe-shop.vercel.app/cartDetail/" + id, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          console.log("Lỗi xóa sản phẩm với ID: " + id);
+        }
+      }
+
+      // Sử dụng hình thức chức năng của setState
+      setCheckCartDetail((prev) => !prev);
+    } catch (error) {
+      console.error("Đã xảy ra lỗi:", error);
+    }
   };
 
   const updateCartDetail = async (id, updatedProduct) => {
