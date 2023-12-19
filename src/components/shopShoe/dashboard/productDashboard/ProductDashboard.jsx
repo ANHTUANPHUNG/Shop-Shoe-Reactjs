@@ -8,7 +8,7 @@ import { ModalUpdateProduct } from "./ModalUpdateProduct";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { LayoutDashboard } from "../LayoutDashboard";
-
+import api from "../../../../service/api"
 export function ProductDashboard() {
   const [showFormAddProduct, setShowFormAddProduct] = useState(false);
   const [product, setProduct] = useState([]);
@@ -26,12 +26,15 @@ export function ProductDashboard() {
   const [element, setElement] = useState(10);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPage, setTotalPage] = useState();
+  const [checkLoad, setCheckLoad] = useState(false);
+  const [checkLoadImage, setCheckLoadImage] = useState(false);
 
   const CLOUD_NAME = "dw4xpd646";
   const UPLOAD_PRESET = "oohlfcxa";
   const [url, setUrl] = useState("");
 
   const handleImageChange = async (event) => {
+    setCheckLoadImage(true);
     const file = event.target.files[0];
     const image = file;
     const reader = new FileReader();
@@ -49,6 +52,7 @@ export function ProductDashboard() {
     if (response.ok) {
       const res = await response.json();
       setUrl(res.secure_url);
+      setCheckLoadImage(false);
     }
   };
 
@@ -108,7 +112,7 @@ export function ProductDashboard() {
     });
 
     if (result.isConfirmed) {
-      const response = await fetch("https://json-server-shoe-shop.vercel.app/product/" + id, {
+      const response = await fetch(api.API_PRODUCT+"/" + id, {
         method: "DELETE",
       });
       if (response.ok) {
@@ -148,7 +152,7 @@ export function ProductDashboard() {
       prevPrice: prevPrice,
     };
 
-    const response = await fetch("https://json-server-shoe-shop.vercel.app/product/" + idProduct, {
+    const response = await fetch(api.API_PRODUCT+ "/" + idProduct, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -180,7 +184,7 @@ export function ProductDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`https://json-server-shoe-shop.vercel.app/product`);
+      const response = await fetch(api.API_PRODUCT);
       const res = await response.json();
       const start = (pageNumber - 1) * element;
       const end = start + Number(element);
@@ -214,7 +218,7 @@ export function ProductDashboard() {
       prevPrice: prevPrice,
     };
 
-    const response = await fetch("https://json-server-shoe-shop.vercel.app/product", {
+    const response = await fetch(api.API_PRODUCT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -240,6 +244,9 @@ export function ProductDashboard() {
   };
   return (
     <Fragment>
+      {checkLoadImage && <span className="loaders"></span>}
+      {Object.keys(product).length == 0 && <span className="loader"></span>}
+      
       <Fragment>
         <ModalUpdateProduct
           show={show}
@@ -286,8 +293,8 @@ export function ProductDashboard() {
                     title={title}
                     setPrice={setPrice}
                     price={price}
-                    prevPrice ={prevPrice}
-                    setPrevPrice ={setPrevPrice}
+                    prevPrice={prevPrice}
+                    setPrevPrice={setPrevPrice}
                     setShowFormAddProduct={setShowFormAddProduct}
                     setCategory={setCategory}
                     category={category}

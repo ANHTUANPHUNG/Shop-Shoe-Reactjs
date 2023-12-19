@@ -4,15 +4,16 @@ import { OrderManagement } from "./OrderManagement";
 import { MenuDashboard } from "../MenuDashboard";
 import { NavLink } from "react-router-dom";
 import { LayoutDashboard } from "../LayoutDashboard";
-
+import api from "../../../../service/api"
 export function BillDashboard() {
   const [listBill, setListBill] = useState([]);
   const [billId, setBillId] = useState([]);
   const [billInformation, setBillInformation] = useState(false);
+  const [checkLoad, setCheckLoad] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`https://json-server-shoe-shop.vercel.app/billDetail`);
+      const response = await fetch(api.API_Bill);
 
       const res = await response.json();
 
@@ -30,6 +31,8 @@ export function BillDashboard() {
   };
   return (
     <Fragment>
+            {Object.keys(listBill).length == 0 && <span className="loader"></span>}
+
       <LayoutDashboard/>
       <div className="container my-2 d-flex">
         <div className="d-flex" style={{ width: "100%" }}>

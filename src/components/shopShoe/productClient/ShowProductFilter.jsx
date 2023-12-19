@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 
-function ShowProductFilter({ productListSearch, handleListProductDetail }) {
+function ShowProductFilter({ productListSearch, handleListProductDetail , handleCheckProductDetail }) {
   return (
     <div className="py-2 justify-content-center">
       <h5>Product</h5>
@@ -8,11 +8,12 @@ function ShowProductFilter({ productListSearch, handleListProductDetail }) {
         {productListSearch.map((product) => (
           <div key={product.id} className="col-md-3 mb-4">
             <div className="card d-flex align-items-center pt-2">
-              <img
+              <img id="imgProductClient"
                 src={product.img}
                 alt=""
                 className="card-image-top"
                 style={{ width: "153px", height: "104px" }}
+                onClick={()=> handleCheckProductDetail(product.id)}
               />
               <div className="card-body">
                 <p

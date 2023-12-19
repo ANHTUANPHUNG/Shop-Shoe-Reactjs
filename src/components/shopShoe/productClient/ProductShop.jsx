@@ -2,13 +2,15 @@ import React, { Fragment, useState, useEffect } from "react";
 import InputSearch from "./InputSearch";
 
 import { toast } from "react-toastify";
-
 import ColorFilter from "./ColorFilter";
 import CategoryFilter from "./CategoryFilter";
 import PriceFilter from "./PriceFilter";
 import RecommendedFilter from "./RecommendedFilter ";
 import ShowProductFilter from "./ShowProductFilter";
 import { NavLink } from "react-router-dom";
+import { Modal } from "react-bootstrap";
+import api from "../../../service/api";
+
 function ProductShop() {
   const [productList, setProductList] = useState([]);
   const [productListSearch, setProductListSearch] = useState([]);
@@ -25,9 +27,12 @@ function ProductShop() {
   const [showGoToTop, setShowGoToTop] = useState(false);
   const [billDetailApi, setBillDetailApi] = useState([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
+  const [show, setShow] = useState(false);
+  const [productById, setProductById] = useState();
+
   useEffect(() => {
     const fetchData = async () => {
-      const productLists = await fetch(`https://json-server-shoe-shop.vercel.app/product`);
+      const productLists = await fetch(api.API_PRODUCT);
       const result = await productLists.json();
       setProductList(result);
       const sortedItems = [...result].sort((a, b) => {
@@ -35,25 +40,24 @@ function ProductShop() {
       });
       setProductListSearch(sortedItems);
 
-      const colorList = await fetch(`https://json-server-shoe-shop.vercel.app/colors`);
+      const colorList = await fetch(api.API_COLOR);
       const resultColors = await colorList.json();
       setColors(resultColors);
 
-      const categoryList = await fetch(`https://json-server-shoe-shop.vercel.app/categories`);
+      const categoryList = await fetch(api.API_CATEGORY);
       const resultCategory = await categoryList.json();
       setCategories(resultCategory);
 
-      const companyList = await fetch(`https://json-server-shoe-shop.vercel.app/companies`);
+      const companyList = await fetch(api.API_COMPANY);
       const resultCompany = await companyList.json();
       setCompanies(resultCompany);
 
-      const priceList = await fetch(`https://json-server-shoe-shop.vercel.app/prices`);
+      const priceList = await fetch(api.API_PRICE);
       const resultPrice = await priceList.json();
       setPrices(resultPrice);
     };
     fetchData();
   }, []);
-
   const handleSearch = () => {
     setProductListSearch(() => {
       let newProductList = productList.filter(
@@ -81,15 +85,14 @@ function ProductShop() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const billDetailApi = await fetch(`https://json-server-shoe-shop.vercel.app/cartDetail`);
+      const billDetailApi = await fetch(api.API_CARTDETAIL);
       const resultBill = await billDetailApi.json();
       setBillDetailApi(resultBill);
     };
     fetchData();
   }, [triggerUpdate]);
-
   const addToCartDetail = async (product) => {
-    const response = await fetch("https://json-server-shoe-shop.vercel.app/cartDetail", {
+    const response = await fetch(api.API_CARTDETAIL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -109,7 +112,7 @@ function ProductShop() {
 
   const updateCartDetail = async (id, updatedProduct) => {
     console.log(updatedProduct);
-    const response = await fetch("https://json-server-shoe-shop.vercel.app/cartDetail/" + id, {
+    const response = await fetch(api.API_CARTDETAIL + "/" + id, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -117,7 +120,7 @@ function ProductShop() {
       body: JSON.stringify(updatedProduct),
     });
     if (response.ok) {
-      toast.info("Add product successfully");
+      toast.info("Update quantity product successfully");
       setTriggerUpdate((prev) => !prev);
     } else {
       toast.error("Add failed product", {
@@ -161,9 +164,164 @@ function ProductShop() {
       });
     }
   };
+  const [quantityProductDetail, setQuantityProductDetail] = useState(0);
+  const handleCheckProductDetail = (id) => {
+    setShow(true);
+    const productById = productListSearch.find((e) => e.id === id);
+    if (productById) {
+      setProductById(productById);
+    }
+    const productDetailId = billDetailApi.find((e) => e.id == productById.id);
+    if (productDetailId) {
+      setQuantityProductDetail(productDetailId.quantity);
+    } else {
+      setQuantityProductDetail(0);
+    }
+  };
+
+  const handleAdd = () => {
+    setQuantityProductDetail((prev) => prev + 1);
+  };
+  const handleMinus = () => {
+    if (quantityProductDetail > 0) {
+      setQuantityProductDetail((prev) => prev - 1);
+    } else {
+      toast.warning("Sản phẩm phải lớn hơn hoặc bằng 0");
+    }
+  };
+
+  const handleCheck = (id) => {
+    if (quantityProductDetail != 0) {
+      const productDetailId = billDetailApi.find((e) => e.id == id);
+      if (productDetailId) {
+        if (productDetailId.quantity == quantityProductDetail) {
+          return;
+        }
+        productDetailId.quantity = quantityProductDetail;
+        productDetailId.total = productDetailId.quantity * productDetailId.newPrice;
+        updateCartDetail(productDetailId.id, productDetailId);
+      } else {
+        let newProduct = productList.find((product) => product.id === id);
+        newProduct.quantity = quantityProductDetail;
+        newProduct.total = newProduct.newPrice * newProduct.quantity;
+        addToCartDetail(newProduct);
+      }
+    }
+  };
+  useEffect(() => {
+    handleCheck(productById?.id);
+  }, [quantityProductDetail, productById?.id]);
 
   return (
     <Fragment>
+      <Modal size="xl" show={show} onHide={() => setShow(false)}>
+        <Modal.Header closeButton></Modal.Header>
+        <Modal.Body>
+          <div className="row ">
+            <div className="col-7 border">
+              <img src={productById?.img} className="w-100 " style={{ height: "429px" }} />
+            </div>
+            <div className="ms-2 col-4 ">
+              <div className="mb-3">
+                <span style={{ color: "red" }}>New</span>
+              </div>
+              <div className="ms-3">
+                <h2>{productById?.title}</h2>
+              </div>
+              <div className="d-flex align-items-center mb-2 ms-3">
+                <i className="fa-solid fa-star "></i>
+                <i className="fa-solid fa-star "></i>
+                <i className="fa-solid fa-star "></i>
+                <i className="fa-solid fa-star "></i>
+                <i className="fa-solid fa-star me-2"></i>
+                <div className="reviews">({productById?.reviews} reviews)</div>
+              </div>
+              <div>
+                <div>
+                  <h4>Price</h4>
+                </div>
+                <div className="d-flex">
+                  <div className="ms-3 me-2 mb-0">
+                    <h6 style={{ color: "#817f7f" }}>${productById?.newPrice}</h6>
+                  </div>
+
+                  <div className="text-decoration-line-through mb-0">
+                    <h6 style={{ color: "#817f7f" }}>${productById?.prevPrice}</h6>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h4>Company</h4>
+                <div className="ms-3">
+                  <h6 style={{ color: "#817f7f" }}>{productById?.company}</h6>
+                </div>
+              </div>
+              <div>
+                <h4>Category</h4>
+                <div className="ms-3">
+                  <h6 style={{ color: "#817f7f" }}>{productById?.category}</h6>
+                </div>
+              </div>
+              <div className="d-flex border-bottom">
+                <h4 className="me-3">Color:</h4>
+                <div
+                  className="mt-1 rounded-circle"
+                  style={{
+                    backgroundColor: productById?.color,
+                    border: `1px solid ${
+                      productById?.color === "White" ? "black" : productById?.color
+                    }`,
+                    width: "25px",
+                    height: "25px",
+                  }}
+                ></div>
+              </div>
+              <div className="d-flex mt-3 ms-3">
+                <div style={{ backgroundColor: "#a3a3a3" }} className="d-flex w-25 me-3">
+                  <div
+                    className="text-center handleQuantity"
+                    style={{ width: "35px", alignSelf: "center" }}
+                    onClick={() => handleMinus(productById?.id)}
+                  >
+                    -
+                  </div>
+                  <input
+                    className="w-75"
+                    type="number"
+                    value={quantityProductDetail}
+                    onChange={(e) => setQuantityProductDetail(e.target.value)}
+                  />
+                  <div
+                    className="text-center handleQuantity"
+                    style={{ width: "35px", alignSelf: "center" }}
+                    onClick={() => handleAdd(productById?.id)}
+                  >
+                    +
+                  </div>
+                </div>
+                <div onClick={handleCheckBillDetailClient}>
+                  {billDetailApi != 0 ? (
+                    <>
+                      <NavLink className="mx-3 " to={"/cartUser"}>
+                        <button className="btn btn-primary">Buy Now</button>
+                      </NavLink>
+                      <NavLink className="mx-3 " to={"/cartUser"}>
+                        <i className="fa-solid fa-cart-shopping "></i>
+                      </NavLink>
+                    </>
+                  ) : (
+                    <>
+                      <button className="btn btn-primary mx-3">Buy Now</button>
+                      <i className="fa-solid fa-cart-shopping mx-3  "></i>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+      {Object.keys(productListSearch).length == 0 && <span className="loader"></span>}
       <div className="d-flex mt-2 py-2 border-bottom align-items-center container">
         <div className="ms-0 ps-2" style={{ width: "180px" }}>
           <a href="#" className="text-decoration-none " style={{ color: "black" }}>
@@ -231,6 +389,7 @@ function ProductShop() {
           <ShowProductFilter
             productListSearch={productListSearch}
             handleListProductDetail={handleListProductDetail}
+            handleCheckProductDetail={handleCheckProductDetail}
           />
         </div>
       </div>

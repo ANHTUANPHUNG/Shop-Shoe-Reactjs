@@ -6,6 +6,7 @@ import moment from "moment";
 import ShowProductDetail from "./ShowProductDetail";
 import SubmitFormDetail from "./SubmitFormDetail";
 import { NavLink } from "react-router-dom";
+import api from "../../../service/api";
 function ProductDetail() {
   const [productDetailCustomer, setProductDetailCustomer] = useState([]);
   const [checkCartDetail, setCheckCartDetail] = useState(false);
@@ -14,10 +15,10 @@ function ProductDetail() {
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
-
+  const [checkLoad, setCheckLoad] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("https://json-server-shoe-shop.vercel.app/cartDetail");
+      const res = await fetch(api.API_CARTDETAIL);
       const result = await res.json();
       const newTotal = result.reduce(
         (prevValue, curProduct) => prevValue + Number(curProduct.total),
@@ -59,41 +60,34 @@ function ProductDetail() {
     });
 
     if (result.isConfirmed) {
-      const response = await fetch("https://json-server-shoe-shop.vercel.app/cartDetail/" + id, {
+      const response = await fetch(api.API_CARTDETAIL + "/" + id, {
         method: "DELETE",
       });
       if (response.ok) {
-        setProductDetailCustomer((prev) => prev.map((e) => e.id != id));
+        setProductDetailCustomer((prev) => prev.filter((e) => e.id !== id));
         setCheckCartDetail((prev) => !prev);
         toast.error("Deleted successfully");
       }
     }
   };
-  const deleteAllProductDetail = async (submitForm) => {
-    try {
-      const reduceDelete = submitForm.product.reduce((index, valueSubmit) => {
-        return index.concat(valueSubmit.id);
-      }, []);
 
-      for (const id of reduceDelete) {
-        const response = await fetch("https://json-server-shoe-shop.vercel.app/cartDetail/" + id, {
-          method: "DELETE",
-        });
-
-        if (!response.ok) {
-          console.log("Lỗi xóa sản phẩm với ID: " + id);
-        }
+  const deleteAllProductDetail = async () => {
+    for (let i = 0; i < productDetailCustomer.length; i++) {
+      const response = await fetch(api.API_CARTDETAIL + "/" + productDetailCustomer[i].id, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        console.log("Lỗi xóa sản phẩm");
+        return;
       }
-
-      // Sử dụng hình thức chức năng của setState
-      setCheckCartDetail((prev) => !prev);
-    } catch (error) {
-      console.error("Đã xảy ra lỗi:", error);
     }
+    
+    setProductDetailCustomer([]);
+    setCheckCartDetail((prev) => !prev);
   };
-
+  
   const updateCartDetail = async (id, updatedProduct) => {
-    const response = await fetch("https://json-server-shoe-shop.vercel.app/cartDetail/" + id, {
+    const response = await fetch(api.API_CARTDETAIL + "/" + id, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -101,10 +95,6 @@ function ProductDetail() {
       body: JSON.stringify(updatedProduct),
     });
     if (response.ok) {
-      // const newProduct = [...productDetailCustomer];
-
-      // setProductDetailCustomer(newProduct);
-
       setCheckCartDetail((prev) => !prev);
       toast.info("Successful change");
     } else {
@@ -118,6 +108,7 @@ function ProductDetail() {
       toast.error("Fill in all required fields");
       return;
     }
+    setCheckLoad(true);
     const submitForm = {
       product: [...productDetailCustomer],
       totalDetail: totalDetail,
@@ -131,7 +122,7 @@ function ProductDetail() {
       ship: "FREE",
     };
     const pushBillDetail = async () => {
-      const response = await fetch("https://json-server-shoe-shop.vercel.app/billDetail/", {
+      const response = await fetch(api.API_Bill, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -139,8 +130,10 @@ function ProductDetail() {
         body: JSON.stringify(submitForm),
       });
       if (response.ok) {
-        toast.success("Order successfully");
+        setCheckLoad(false);
+
         deleteAllProductDetail(submitForm);
+        toast.success("Order successfully");
         e.target.reset();
       }
     };
@@ -150,6 +143,8 @@ function ProductDetail() {
   const productHandle = () => {};
   return (
     <Fragment>
+      {checkLoad && <span className="loader"></span>}
+
       <Fragment>
         <div className="d-flex mt-2 py-2 border-bottom align-items-center container">
           <div className="ms-0 ps-2" style={{ width: "180px" }}>
@@ -199,12 +194,16 @@ function ProductDetail() {
             </div>
             <div className="row ">
               <div className="col-8">
-                <ShowProductDetail
-                  productDetailCustomer={productDetailCustomer}
-                  handleClickAdd={handleClickAdd}
-                  handleClickMinus={handleClickMinus}
-                  deleteProductDetail={deleteProductDetail}
-                />
+                {Object.keys(productDetailCustomer).length != 0 ? (
+                  <ShowProductDetail
+                    productDetailCustomer={productDetailCustomer}
+                    handleClickAdd={handleClickAdd}
+                    handleClickMinus={handleClickMinus}
+                    deleteProductDetail={deleteProductDetail}
+                  />
+                ) : (
+                  ""
+                )}
 
                 <NavLink to={"/"}>
                   <i className="fa-solid fa-left-long me-1"></i>Continue Shopping
