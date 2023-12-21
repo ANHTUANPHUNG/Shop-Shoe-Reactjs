@@ -1,10 +1,13 @@
-import { Modal } from "react-bootstrap";
+import { Modal, Nav } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const schema = yup
   .object({
@@ -42,63 +45,44 @@ export function TestModule() {
   const {
     register,
     handleSubmit,
-    setValue, 
+    setValue,
 
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
   const [show, setShow] = useState(false);
-  const [product, setProduct] = useState([]);
+  const [banking, setBanking] = useState([]);
+
   const [check, setCheck] = useState(false);
   const [mode, setMode] = useState("create");
   const [idProduct, setIdProduct] = useState();
 
-  const cityList = [
-    {
-      id: 1,
-      name: "Huế",
-    },
-    {
-      id: 2,
-      name: "Quảng Trị",
-    },
-  ];
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`http://localhost:3300/user`);
+      const response = await fetch(`http://localhost:3300/banking`);
       const res = await response.json();
-      setProduct(res);
+      setBanking(res);
     };
 
     fetchData();
   }, [check]);
-  const onSubmit = async (data) => {
-    const url = mode === "create" ? "http://localhost:3300/user" : `http://localhost:3300/user/${idProduct}`;
-
-    const response = await fetch(url, {
-      method: mode === "create" ? "POST" : "PUT", 
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
     });
-    if (response.ok) {
-      setCheck((prev) => !prev);
-      setShow(false);
-    }
-  };
-  const handleShowUpdate = (id) => {
-    const productById = product.find((e) => e.id === id);
-    if (productById) {
-      setShow(true);
-      setMode("update");
-      setIdProduct(productById.id);
-      setValue("fullName", productById.fullName);
-      setValue("email", productById.email);
-      setValue("password", productById.password); 
-      setValue("confirmPassword", productById.confirmPassword);
-      setValue("age", productById.age);
-      setValue("gender", productById.gender);
-      setValue("city", productById.city);
+
+    if (result.isConfirmed) {
+      const response = await fetch(`http://localhost:3300/banking/` + id, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        setCheck((prev) => !prev);
+        toast.error("Xóa thành công");
+      }
     }
   };
 
@@ -113,164 +97,77 @@ export function TestModule() {
             <h3>List Product</h3>
           </div>
           <div className="me-2">
-            <button className="btn btn-primary" type="button" onClick={() => (setShow(true) , setMode("create"))}>
-              Create
-            </button>
+            <NavLink to="/transferHistory">
+              <button className="btn btn-primary me-3" type="button">
+                <i className="fa-solid fa-clock-rotate-left me-1"></i>
+                Transfer history
+              </button>
+            </NavLink>
+
+            <NavLink to="/addUser">
+              <button className="btn btn-primary" type="button">
+                <i className="fa-regular fa-square-plus me-1"></i>
+                Add new Customer
+              </button>
+            </NavLink>
           </div>
         </div>
         <div>
           <table className="" style={{ width: "100%" }}>
             <thead>
-              <tr>
-                <th>a</th>
-                <th>b</th>
-                <th>c</th>
-                <th>d</th>
+              <tr style={{ backgroundColor: "#02eb02" }}>
+                <th>#</th>
+                <th>FullName</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Balance</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {/* {product.map((e) => (
+              {banking.map((e) => (
                 <tr key={e.id}>
-                  <td>
-                    <button onClick={() => handleShowUpdate(e.id)}>edit</button>
-                  </td>
+                  <th>{e.id}</th>
+                  <th>{e.fullName}</th>
+                  <th>{e.email}</th>
+                  <th>{e.phone}</th>
+                  <th>{e.address}</th>
+                  <th>{e.balance}</th>
+                  <th>
+                    <NavLink to={`/updateUser/${e.id}`}>
+                      <button type="button" className="btn btn-primary me-3">
+                        <i className="fa-solid fa-pen-to-square"></i>
+                      </button>
+                    </NavLink>
+                    <NavLink to={`/deposit/${e.id}`}>
+                      <button type="button" className="btn btn-success me-3">
+                        <i className="fa-solid fa-plus "></i>
+                      </button>
+                    </NavLink>
+                    <NavLink to={`/withdraw/${e.id}`}>
+                      <button type="button" className="btn btn-info me-3">
+                        <i className="fa-solid fa-minus"></i>
+                      </button>
+                    </NavLink>
+                    <NavLink to={`/transfer/${e.id}`}>
+                      <button type="button" className="btn btn-secondary me-3">
+                        <i className="fa-solid fa-arrow-right-arrow-left"></i>
+                      </button>
+                    </NavLink>
+                    <button
+                      type="button"
+                      className="btn btn-danger "
+                      onClick={() => handleDelete(e.id)}
+                    >
+                      <i className="fa-solid fa-ban "></i>
+                    </button>
+                  </th>
                 </tr>
-              ))} */}
+              ))}
             </tbody>
           </table>
         </div>
-      </div>
-
-      <div>
-        <Modal show={show} onHide={() => setShow(false)} size="lg" aria-labelledby="" centered>
-          <Modal.Header closeButton>
-            <Modal.Title>Modal {mode === "create" ? "Create" : "Update"}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <form className="row needs-validation" onSubmit={handleSubmit(onSubmit)}>
-              <div className="">
-                <div className="form-group mb-3 ">
-                  <label htmlFor="fullName" className="form-label">
-                    Full Name
-                  </label>
-                  <input
-                    id="fullName"
-                    type="text"
-                    className={`form-control ${errors?.fullName?.message ? "is-invalid" : ""}`}
-                    {...register("fullName")}
-                  />
-                  <label htmlFor="fullName" className="invalid-feedback">
-                    {errors?.fullName?.message}
-                  </label>
-                </div>
-                <div className="form-group mb-3 ">
-                  <label htmlFor="email" className="form-label">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="text"
-                    className={`form-control ${errors?.email?.message ? "is-invalid" : ""}`}
-                    {...register("email")}
-                  />
-                  <label htmlFor="email" className="invalid-feedback">
-                    {errors?.email?.message}
-                  </label>
-                </div>
-                <div className="form-group mb-3 has-validation">
-                  <label className="form-lable">Password</label>
-                  <input
-                    type="password"
-                    className={`form-control ${errors?.password?.message ? "is-invalid" : ""}`}
-                    {...register(`password`)}
-                  />
-                  <span className="invalid-feedback">{errors?.password?.message}</span>
-                </div>
-                <div className="form-group mb-3 has-validation">
-                  <label className="form-lable">Confirm Password</label>
-                  <input
-                    type="password"
-                    className={`form-control ${
-                      errors?.confirmPassword?.message ? "is-invalid" : ""
-                    }`}
-                    {...register("confirmPassword")}
-                  />
-                  <span className="invalid-feedback">{errors?.confirmPassword?.message}</span>
-                </div>
-                <div className="form-group mb-3">
-                  <label htmlFor="age" className="form-label">
-                    Age
-                  </label>
-                  <input
-                    id="age"
-                    type="text"
-                    className={`form-control ${errors?.age?.message ? "is-invalid" : ""}`}
-                    {...register("age")}
-                  />
-                  <label htmlFor="age" className="invalid-feedback">
-                    {errors?.age?.message}
-                  </label>
-                </div>
-                <div>
-                  <div>Gender</div>
-                  <div className="form-check form-check-inline">
-                    <input
-                      className={`form-check-input ${errors?.gender?.message ? "is-invalid" : ""}`}
-                      type="radio"
-                      name="male"
-                      id="radioCheck"
-                      value="male"
-                      {...register("gender")}
-                    />
-                    <label className="form-check-label" htmlFor="radioCheck">
-                      Male
-                    </label>
-                  </div>
-                  <div className="form-check form-check-inline">
-                    <input
-                      className={`form-check-input ${errors?.gender?.message ? "is-invalid" : ""}`}
-                      type="radio"
-                      name="female"
-                      id="radioCheck2"
-                      value="female"
-                      {...register("gender")}
-                    />
-                    <label className="form-check-label" htmlFor="radioCheck2">
-                      Female
-                    </label>
-                  </div>
-                </div>
-                <div>
-                  <select
-                    className={`form-select ${errors?.city?.message ? "is-invalid" : ""}`}
-                    {...register("city")}
-                    id="selectCity"
-                  >
-                    <option value="">Open this select menu</option>
-
-                    {cityList.map((city) => (
-                      <option key={city.id} value={city.name}>
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
-                  <label htmlFor="selectCity" className="invalid-feedback d-block">
-                    {errors?.city?.message}
-                  </label>
-                </div>
-              </div>
-
-              <div className="text-end mt-3">
-                <Button variant="secondary" onClick={() => setShow(false)} className="me-2">
-                  Close
-                </Button>
-                <Button variant="primary" type="submit">
-                  Save Changes
-                </Button>
-              </div>
-            </form>
-          </Modal.Body>
-        </Modal>
       </div>
     </>
   );
