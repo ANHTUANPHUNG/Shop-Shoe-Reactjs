@@ -2,27 +2,24 @@ import React, { Fragment } from 'react';
 import './App.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ProductShop from './components/shopShoe/productClient/ProductShop';
 import { Route, Routes } from 'react-router-dom';
-import ProductDetail from './components/shopShoe/productDetail/ProductDetail';
+import Recommended from './components/Recommended/Recommended';
+import Navbar from './components/Navbar/Navbar';
+import Products from './components/Products/Products';
+import Sidebar from './components/Sidebar/Sidebar';
 
-import Page404 from './components/shopShoe/Page404';
-import { BillDashboard } from './components/shopShoe/dashboard/billDashboard/BillDashboard';
-import { ProductDashboard } from './components/shopShoe/dashboard/productDashboard/ProductDashboard';
 
 function App() {
 
   return (
-    <Fragment>
-      <ToastContainer autoClose={3000} theme='colored' />
-      <Routes>
-        <Route path='/' element={<ProductShop/>}></Route>
-        <Route path='/cartUser' element={<ProductDetail/>}></Route>
-        <Route path='/dashboard' element={<BillDashboard/>}/>
-        <Route path='/dashboard/product' element={<ProductDashboard/>}/>
-        <Route path='*' element={<Page404 />} ></Route>
-      </Routes>
-    </Fragment>
+    <div className='container d-flex'>
+    <Sidebar/>
+    <div className='d-flex flex-column flex-grow-1'>
+      <Navbar />
+      <Recommended />
+      <Products />
+    </div>
+  </div>
   );
 }
 
